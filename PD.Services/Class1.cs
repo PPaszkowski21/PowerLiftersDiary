@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PD.Data
+namespace PD.Services
 {
     public class Class1
     {
