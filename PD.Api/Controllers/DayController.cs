@@ -15,7 +15,7 @@ namespace PD.Api.Controllers
     [RoutePrefix("day")]
     public class DayController : BaseApiController
     {
-        public readonly ICrudService<IDay> _crudService;
+        private readonly ICrudService<IDay> _crudService;
 
         public DayController()
         {
