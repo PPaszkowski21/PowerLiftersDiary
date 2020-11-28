@@ -12,7 +12,6 @@ namespace PowerlifterDiary.Models
         {
 
         }
-
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<ExerciseEquipment> ExerciseEquipment { get; set; }
         public DbSet<ExerciseDetails> ExercisesDetails { get; set; }
@@ -23,7 +22,6 @@ namespace PowerlifterDiary.Models
         public DbSet<Dream> Dreams { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserDetails> UserDetails { get; set; }
-
 
     }
 }
