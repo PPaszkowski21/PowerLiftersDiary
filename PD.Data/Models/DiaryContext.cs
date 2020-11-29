@@ -8,7 +8,7 @@ namespace PowerlifterDiary.Models
 {
     public class DiaryContext : DbContext
     {
-        public DiaryContext():base("name=RemoteConnectionString")
+        public DiaryContext():base("name=ConnectionString")
         {
 
         }

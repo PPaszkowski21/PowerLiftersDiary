@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +22,6 @@ namespace PD.Services
         public string ResponseMessage { get; set; }
         public HttpStatusCode StatusCode { get; set; }
     }
-
     public class ServiceResponse<T>
     {
         public ServiceResponse(T content, HttpStatusCode statusCode, string responseMessage = "")

@@ -32,14 +32,29 @@ namespace PD.Api.Controllers
         }
 
         [HttpGet]
-        [Route("get")]
-        public User GetUser(int id)
+        [Route("read")]
+        public IHttpActionResult Read()
         {
-            using(DiaryContext db = new DiaryContext())
-            {
-                User user = db.Users.Where(x => x.Id == id).Include(x => x.Diaries).FirstOrDefault();
-                return user;
-            }
+            var result = _userService.Read();
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpGet]
+        [Route("get")]
+        public IHttpActionResult ReadById(int id)
+        {
+            if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _userService.ReadById(id);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpDelete]
+        [Route("delete")]
+        public IHttpActionResult Delete(int id)
+        {
+            if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _userService.Delete(id);
+            return ResponseMessage(CreateCustomResponseMessage(result));
         }
     }
 }
