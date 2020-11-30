@@ -1,16 +1,13 @@
 ﻿using PD.Services.Contracts.Api.Users.Responses;
+using PD.Services.Interfaces;
 using PowerlifterDiary.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UsersDetails = PowerlifterDiary.Models.UserDetails;
 
 namespace PD.Services.Contracts.Api.UserDetails.Responses
 {
-    public class UserDetailsResponse
+    public class UserDetailsResponse : IUserDetails
     {
-        public int Owner { get; set; }
+        public int UserId { get; set; }
         public int Height { get; set; }
         public float Weight { get; set; }
         public int Age { get; set; }
@@ -22,11 +19,21 @@ namespace PD.Services.Contracts.Api.UserDetails.Responses
 
         }
 
+        public UserDetailsResponse(UsersDetails userDetails)
+        {
+            UserId = userDetails.Id;
+            Height = userDetails.Height;
+            Weight = userDetails.Weight;
+            Age = userDetails.Age;
+            BMI = userDetails.BMI;
+            BMR = userDetails.BMR;
+        }
+
         public UserDetailsResponse(User user)
         {
             if(user.UserDetails != null)
             {
-                Owner = user.Id;
+                UserId = user.Id;
                 Height = user.UserDetails.Height;
                 Weight = user.UserDetails.Weight;
                 Age = user.UserDetails.Age;

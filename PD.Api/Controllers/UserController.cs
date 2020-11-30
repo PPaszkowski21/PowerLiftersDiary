@@ -1,4 +1,5 @@
 ﻿using PD.Services;
+using PD.Services.Contracts.Api.UserDetails.Requests;
 using PD.Services.Contracts.Api.Users.Requests;
 using PD.Services.Interfaces;
 using PD.Services.Services;
@@ -63,6 +64,26 @@ namespace PD.Api.Controllers
         {
             if (user.Id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
             var result = _userService.Update(user);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpPost]
+        [Route("adddetails")]
+        public IHttpActionResult AddDetails(AddUserDetailsRequest user)
+        {
+            if (user == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var userService = (UserService)_userService;
+            var result = userService.AddDetails(user);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpPut]
+        [Route("updatedetails")]
+        public IHttpActionResult UpdateDetails(UpdateUserDetailsRequest user)
+        {
+            if (user == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var userService = (UserService)_userService;
+            var result = userService.UpdateDetails(user);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
     }

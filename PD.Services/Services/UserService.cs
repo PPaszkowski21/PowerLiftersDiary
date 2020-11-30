@@ -109,8 +109,68 @@ namespace PD.Services.Services
                 db.SaveChanges();
                 return new ServiceResponse<IUser>(new UserResponse(userToUpdate), HttpStatusCode.OK, "User was updated successfully");
             }
-
         }
 
+        public ServiceResponse<IUserDetails> AddDetails(IUserDetails userDetailsRequest)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                User userVerification = db.Users.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
+                if(userVerification == null || userVerification.UserDetails != null)
+                {
+                    return new ServiceResponse<IUserDetails>(null, HttpStatusCode.BadRequest, "User does not exist or it already has a details");
+                }
+                var userDetails = new UserDetails
+                {
+                    Id = userDetailsRequest.UserId,
+                    Age = userDetailsRequest.Age,
+                    Height = userDetailsRequest.Height,
+                    Weight = userDetailsRequest.Weight,
+                    User = db.Users.FirstOrDefault(x => x.Id == userDetailsRequest.UserId)
+                };
+                var BMIandBMR = CalculateBMIandBMR(userDetails.Weight, userDetails.Height, userDetails.Height);
+                userDetails.BMI = BMIandBMR[0];
+                userDetails.BMR = BMIandBMR[1];
+                var _user = db.UserDetails.Add(userDetails);
+                db.SaveChanges();
+                return new ServiceResponse<IUserDetails>(new UserDetailsResponse(_user), HttpStatusCode.OK, "UserDetails added succesfully!");
+            }
+        }
+
+        public ServiceResponse<IUserDetails> UpdateDetails(IUserDetails userDetailsRequest)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                UserDetails userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
+                if (userDetailsToUpdate == null)
+                {
+                    return new ServiceResponse<IUserDetails>(null, HttpStatusCode.NotFound, "There are not existing user details with given id!");
+                }
+                userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
+                if (userDetailsRequest.Age > 0)
+                {
+                    userDetailsToUpdate.Age = userDetailsRequest.Age;
+                }
+                if (userDetailsRequest.Height > 0)
+                {
+                    userDetailsToUpdate.Height = userDetailsRequest.Height;
+                }
+                if (userDetailsRequest.Weight > 0)
+                {
+                    userDetailsToUpdate.Weight = userDetailsRequest.Weight;
+                }
+                db.SaveChanges();
+                return new ServiceResponse<IUserDetails>(new UserDetailsResponse(userDetailsToUpdate), HttpStatusCode.OK, "UserDetails added succesfully!");
+            }
+        }
+        public float[] CalculateBMIandBMR(float weight, int height, int age)
+        {
+            float[] results = new float[2];
+            double heightToSquare = Convert.ToDouble(height);
+            float height2 = Convert.ToSingle(Math.Pow(heightToSquare, 2))/10000;
+            results[0] = weight / height2;
+            results[1] = (float)9.99 * weight + (float)6.25 * height - (float)4.92 * age + 5;
+            return results;
+        }
     }
 }
