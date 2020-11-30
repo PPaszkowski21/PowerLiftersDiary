@@ -10,7 +10,8 @@ namespace PowerlifterDiary.Models
     {
         public DiaryContext():base("name=ConnectionString")
         {
-
+            Configuration.LazyLoadingEnabled = true;
+            Configuration.ProxyCreationEnabled = true;
         }
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<ExerciseEquipment> ExerciseEquipment { get; set; }
@@ -22,6 +23,5 @@ namespace PowerlifterDiary.Models
         public DbSet<Dream> Dreams { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserDetails> UserDetails { get; set; }
-
     }
 }

@@ -7,7 +7,7 @@ namespace PowerlifterDiary.Models
     public class Diary
     {
         public int Id { get; set; }
-        public User User { get; set; }
+        public virtual User User { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Conclusions { get; set; }
@@ -18,7 +18,7 @@ namespace PowerlifterDiary.Models
         public int SquatEnd { get; set; }
         public int DeadliftEnd { get; set; }
         public float Progress { get; set; }
-        public ICollection<Day> Days { get; set; }
+        public virtual ICollection<Day> Days { get; set; }
 
     }
 }

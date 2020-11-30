@@ -8,6 +8,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace PD.Services.Services
 {
@@ -38,6 +39,18 @@ namespace PD.Services.Services
                 Diary _diary = db.Diaries.Add(diary);
                 db.SaveChanges();
                 return new ServiceResponse<IDiary>(null, HttpStatusCode.OK, "Diary added succesfully!");
+            }
+        }
+
+        public DiaryResponse GetDiary(int id)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                if (!db.Diaries.Any(x => x.Id == id))
+                {
+                    return null;
+                }
+                return new DiaryResponse(db.Diaries.Include(x=>x.Days).Include(x => x.User).FirstOrDefault(x => x.Id == id));
             }
         }
 

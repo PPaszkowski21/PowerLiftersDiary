@@ -58,6 +58,7 @@
     <Compile Include="Contracts\Api\Diaries\Responses\DiaryResponse.cs" />
     <Compile Include="Contracts\Api\UserDetails\Responses\UserDetailsResponse.cs" />
     <Compile Include="Contracts\Api\Users\Requests\AddUserRequest.cs" />
+    <Compile Include="Contracts\Api\Users\Requests\UpdateUserRequest.cs" />
     <Compile Include="Contracts\Api\Users\Responses\UserResponse.cs" />
     <Compile Include="Interfaces\ICrudService.cs" />
     <Compile Include="Interfaces\IDay.cs" />

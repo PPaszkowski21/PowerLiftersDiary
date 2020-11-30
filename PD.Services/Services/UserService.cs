@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 
 namespace PD.Services.Services
 {
@@ -19,7 +20,7 @@ namespace PD.Services.Services
                 Name = userRequest.Name,
                 Surname = userRequest.Surname,
                 City = userRequest.City,
-                UserDetails = new UserDetails()
+                UserDetails = null
             };
             using (DiaryContext db = new DiaryContext())
             {
@@ -37,7 +38,14 @@ namespace PD.Services.Services
                 {
                     return new ServiceResponse(HttpStatusCode.NotFound, "There is not existing user with given id!");
                 }
-                db.Users.Remove(db.Users.FirstOrDefault(x => x.Id == id));
+
+                var userToRemove = db.Users.Include(x => x.Diaries).Include(x => x.UserDetails).FirstOrDefault(x => x.Id == id);
+                db.Diaries.RemoveRange(userToRemove.Diaries);
+                if(userToRemove.UserDetails != null)
+                {
+                    db.UserDetails.Remove(userToRemove.UserDetails);
+                }
+                db.Users.Remove(userToRemove);
                 db.SaveChanges();
             }
             return new ServiceResponse(HttpStatusCode.OK, "User deleted!");
@@ -45,22 +53,17 @@ namespace PD.Services.Services
 
         public ServiceResponse<IEnumerable<IUser>> Read()
         {
-            var users = new List<User>();
-            var users2 = new List<UserResponse>();
-            //using (DiaryContext db = new DiaryContext())
-            //{
-            //    users = db.Users.Include("Diaries","UserDetails").ToList();
-            //    var users2 = db.Users.Select(o => new UserResponse
-            //    {
-            //        Id = o.,
-            //        Diaries = o..Select(ot => ot.).ToList()
-            //    }).ToList();
-            //}
-            //foreach (var item in users)
-            //{
-            //    users2.Add(new UserResponse(item));
-            //}
-            return new ServiceResponse<IEnumerable<IUser>>(users2, HttpStatusCode.OK, "Table downloaded!");
+            List<User> users = new List<User>();
+            using (DiaryContext db = new DiaryContext())
+            {
+                users = db.Users.Include(x => x.Diaries).Include(x => x.UserDetails).ToList();
+            }
+            List<UserResponse> userResponses = new List<UserResponse>();
+            foreach (var item in users)
+            {
+                userResponses.Add(new UserResponse(item));
+            }
+            return new ServiceResponse<IEnumerable<IUser>>(userResponses, HttpStatusCode.OK, "Table downloaded!");
         }
 
         public ServiceResponse<IUser> ReadById(int id)
@@ -70,16 +73,44 @@ namespace PD.Services.Services
             {
                 if (!db.Users.Any(x => x.Id == id))
                 {
-                    return new ServiceResponse<IUser>(null, HttpStatusCode.NotFound, "There is not existing monster with given id!");
+                    return new ServiceResponse<IUser>(null, HttpStatusCode.NotFound, "There is not existing user with given id!");
                 }
                 user = db.Users.Include(x=>x.Diaries).Include(x=>x.UserDetails).FirstOrDefault(x => x.Id == id); 
             }
             UserResponse userResponse = new UserResponse(user);
-            return new ServiceResponse<IUser>(userResponse, HttpStatusCode.OK, "Monster downloaded!");
+            return new ServiceResponse<IUser>(userResponse, HttpStatusCode.OK, "User downloaded!");
         }
-            public ServiceResponse<IUser> Update(IUser content)
+
+        public ServiceResponse<IUser> Update(IUser updateUserRequest)
+        {
+            Type myType = updateUserRequest.GetType();
+            PropertyInfo property = myType.GetProperty("Id");
+            int id = (int)property.GetValue(updateUserRequest);
+            User userToUpdate;
+            using (DiaryContext db = new DiaryContext())
             {
-                throw new NotImplementedException();
+                if (!db.Users.Any(x => x.Id == id))
+                {
+                    return new ServiceResponse<IUser>(null, HttpStatusCode.NotFound, "There is not existing user with given id!");
+                }
+                userToUpdate = db.Users.FirstOrDefault(x => x.Id == id);
+                if (!string.IsNullOrEmpty(updateUserRequest.Name))
+                {
+                    userToUpdate.Name = updateUserRequest.Name;
+                }
+                if (!string.IsNullOrEmpty(updateUserRequest.Surname))
+                {
+                    userToUpdate.Surname = updateUserRequest.Surname;
+                }
+                if (!string.IsNullOrEmpty(updateUserRequest.City))
+                {
+                    userToUpdate.City = updateUserRequest.City;
+                }
+                db.SaveChanges();
+                return new ServiceResponse<IUser>(new UserResponse(userToUpdate), HttpStatusCode.OK, "User was updated successfully");
             }
+
+        }
+
     }
 }

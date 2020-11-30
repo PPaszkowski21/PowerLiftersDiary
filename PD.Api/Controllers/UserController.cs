@@ -56,5 +56,14 @@ namespace PD.Api.Controllers
             var result = _userService.Delete(id);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
+
+        [HttpPut]
+        [Route("update")]
+        public IHttpActionResult Update(UpdateUserRequest user)
+        {
+            if (user.Id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _userService.Update(user);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
     }
 }

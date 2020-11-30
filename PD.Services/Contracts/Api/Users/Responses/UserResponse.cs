@@ -1,6 +1,7 @@
 ﻿using PD.Services.Contracts.Api.Diaries.Responses;
 using PD.Services.Contracts.Api.UserDetails.Responses;
 using PD.Services.Interfaces;
+using PD.Services.Services;
 using PowerlifterDiary.Models;
 using System;
 using System.Collections.Generic;
@@ -25,9 +26,13 @@ namespace PD.Services.Contracts.Api.Users.Responses
             City = user.City;
             UserDetails = new UserDetailsResponse(user);
             Diaries = new List<DiaryResponse>();
-            foreach (var diary in user.Diaries)
+            if(user.Diaries != null)
             {
-                Diaries.Add(new DiaryResponse(diary));
+                DiaryService diaryService = new DiaryService();
+                foreach (var diary in user.Diaries)
+                {
+                    Diaries.Add(diaryService.GetDiary(diary.Id));
+                }
             }
         }
         public int Id { get; set; }

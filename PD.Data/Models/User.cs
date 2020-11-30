@@ -10,6 +10,6 @@ namespace PowerlifterDiary.Models
         public string Surname { get; set; }
         public string City { get; set; }
         public virtual UserDetails UserDetails { get; set; }
-        public ICollection<Diary> Diaries { get; set; }
+        public virtual ICollection<Diary> Diaries { get; set; }
     }
 }

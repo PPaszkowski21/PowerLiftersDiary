@@ -9,7 +9,7 @@ namespace PowerlifterDiary.Models
     public class UserDetails
     {
         [ForeignKey("User")]
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
         public int Height { get; set; }
         public float Weight { get; set; }
         public int Age { get; set; }

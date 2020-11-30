@@ -24,12 +24,15 @@ namespace PD.Services.Contracts.Api.UserDetails.Responses
 
         public UserDetailsResponse(User user)
         {
-            Owner = user.Id;
-            Height = user.UserDetails.Height;
-            Weight = user.UserDetails.Weight;
-            Age = user.UserDetails.Age;
-            BMR = user.UserDetails.BMR;
-            BMI = user.UserDetails.BMI;
+            if(user.UserDetails != null)
+            {
+                Owner = user.Id;
+                Height = user.UserDetails.Height;
+                Weight = user.UserDetails.Weight;
+                Age = user.UserDetails.Age;
+                BMR = user.UserDetails.BMR;
+                BMI = user.UserDetails.BMI;
+            }
         }
     }
 }
