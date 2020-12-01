@@ -55,6 +55,10 @@
     <Compile Include="Migrations\202011161500042_InitialCreate.designer.cs">
       <DependentUpon>202011161500042_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202012011420251_removeDatesFromDream.cs" />
+    <Compile Include="Migrations\202012011420251_removeDatesFromDream.designer.cs">
+      <DependentUpon>202012011420251_removeDatesFromDream.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Day.cs" />
     <Compile Include="Models\Diary.cs" />
@@ -76,6 +80,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202011161500042_InitialCreate.resx">
       <DependentUpon>202011161500042_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012011420251_removeDatesFromDream.resx">
+      <DependentUpon>202012011420251_removeDatesFromDream.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

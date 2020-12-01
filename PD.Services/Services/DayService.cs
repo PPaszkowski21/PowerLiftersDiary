@@ -113,5 +113,58 @@ namespace PD.Services.Services
                 return new ServiceResponse<IDay>(new DayResponse(dayToUpdate,typeof(DayResponse)), HttpStatusCode.OK, "User was updated successfully");
             }
         }
+
+        public ServiceResponse<IDream> AddDream(IDream dreamRequest)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                //User dreamVerification = db.Users.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
+                //if (userVerification == null || userVerification.UserDetails != null)
+                //{
+                //    return new ServiceResponse<IDream>(null, HttpStatusCode.BadRequest, "User does not exist or it already has a details");
+                //}
+                //var userDetails = new UserDetails
+                //{
+                //    Id = userDetailsRequest.UserId,
+                //    Age = userDetailsRequest.Age,
+                //    Height = userDetailsRequest.Height,
+                //    Weight = userDetailsRequest.Weight,
+                //    User = db.Users.FirstOrDefault(x => x.Id == userDetailsRequest.UserId)
+                //};
+                //var BMIandBMR = CalculateBMIandBMR(userDetails.Weight, userDetails.Height, userDetails.Height);
+                //userDetails.BMI = BMIandBMR[0];
+                //userDetails.BMR = BMIandBMR[1];
+                //var _user = db.UserDetails.Add(userDetails);
+                //db.SaveChanges();
+                return new ServiceResponse<IDream>(null, HttpStatusCode.OK, "UserDetails added succesfully!");
+            }
+        }
+
+        public ServiceResponse<IDream> UpdateDream(IDream userDetailsRequest)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                //UserDetails userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
+                //if (userDetailsToUpdate == null)
+                //{
+                //    return new ServiceResponse<IDream>(null, HttpStatusCode.NotFound, "There are not existing user details with given id!");
+                //}
+                //userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
+                //if (userDetailsRequest.Age > 0)
+                //{
+                //    userDetailsToUpdate.Age = userDetailsRequest.Age;
+                //}
+                //if (userDetailsRequest.Height > 0)
+                //{
+                //    userDetailsToUpdate.Height = userDetailsRequest.Height;
+                //}
+                //if (userDetailsRequest.Weight > 0)
+                //{
+                //    userDetailsToUpdate.Weight = userDetailsRequest.Weight;
+                //}
+                //db.SaveChanges();
+                return new ServiceResponse<IDream>(null, HttpStatusCode.OK, "UserDetails added succesfully!");
+            }
+        }
     }
 }

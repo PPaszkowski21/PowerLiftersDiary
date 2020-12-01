@@ -9,6 +9,7 @@ using System.Web.Http;
 using System.Net;
 using PD.Services.Contracts.Api.Days.Requests;
 using PD.Services.Interfaces;
+using PD.Services.Contracts.Api.Dreams.Requests;
 
 namespace PD.Api.Controllers
 {
@@ -62,6 +63,26 @@ namespace PD.Api.Controllers
         {
             if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
             var result = _crudService.Delete(id);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpPost]
+        [Route("adddream")]
+        public IHttpActionResult AddDream(AddDreamRequest day)
+        {
+            if (day == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var userService = (DayService)_crudService;
+            var result = userService.AddDream(day);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpPut]
+        [Route("updatedream")]
+        public IHttpActionResult UpdateDream(UpdateDreamRequest day)
+        {
+            if (day == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var userService = (DayService)_crudService;
+            var result = userService.UpdateDream(day);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
     }
