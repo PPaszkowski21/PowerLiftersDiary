@@ -8,6 +8,8 @@ namespace PD.Services.Interfaces
 {
     public interface IDream
     {
-
+        int Id { get; set; }
+        float Length { get; set; }
+        string Quality { get; set; }
     }
 }

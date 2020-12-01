@@ -60,6 +60,7 @@
     <Compile Include="Contracts\Api\Diaries\Responses\DiaryResponse.cs" />
     <Compile Include="Contracts\Api\Dreams\Requests\AddDreamRequest.cs" />
     <Compile Include="Contracts\Api\Dreams\Requests\UpdateDreamRequest.cs" />
+    <Compile Include="Contracts\Api\Dreams\Responses\DreamResponse.cs" />
     <Compile Include="Contracts\Api\UserDetails\Requests\AddUserDetailsRequest.cs" />
     <Compile Include="Contracts\Api\UserDetails\Requests\UpdateUserDetailsRequest.cs" />
     <Compile Include="Contracts\Api\UserDetails\Responses\UserDetailsResponse.cs" />
@@ -88,9 +89,7 @@
       <Name>PD.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Contracts\Api\Dreams\Responses\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

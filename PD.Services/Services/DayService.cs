@@ -1,6 +1,7 @@
 ﻿using PD.Services.Contracts.Api.Days.Requests;
 using PD.Services.Contracts.Api.Days.Responses;
 using PD.Services.Contracts.Api.Diaries.Responses;
+using PD.Services.Contracts.Api.Dreams.Responses;
 using PD.Services.Interfaces;
 using PowerlifterDiary.Models;
 using System;
@@ -60,7 +61,7 @@ namespace PD.Services.Services
                 }
 
                 var dayToRemove = db.Days.Include("Diary").Include("Dream").Include("TrainingUnits").FirstOrDefault(x => x.Id == id);
-                db.TrainingUnits.RemoveRange(dayToRemove.TrainingUnits);
+                //db.TrainingUnits.RemoveRange(dayToRemove.TrainingUnits);
                 db.Dreams.Remove(dayToRemove.Dream);
                 db.Days.Remove(dayToRemove);
                 db.SaveChanges();
@@ -118,52 +119,44 @@ namespace PD.Services.Services
         {
             using (DiaryContext db = new DiaryContext())
             {
-                //User dreamVerification = db.Users.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
-                //if (userVerification == null || userVerification.UserDetails != null)
-                //{
-                //    return new ServiceResponse<IDream>(null, HttpStatusCode.BadRequest, "User does not exist or it already has a details");
-                //}
-                //var userDetails = new UserDetails
-                //{
-                //    Id = userDetailsRequest.UserId,
-                //    Age = userDetailsRequest.Age,
-                //    Height = userDetailsRequest.Height,
-                //    Weight = userDetailsRequest.Weight,
-                //    User = db.Users.FirstOrDefault(x => x.Id == userDetailsRequest.UserId)
-                //};
-                //var BMIandBMR = CalculateBMIandBMR(userDetails.Weight, userDetails.Height, userDetails.Height);
-                //userDetails.BMI = BMIandBMR[0];
-                //userDetails.BMR = BMIandBMR[1];
-                //var _user = db.UserDetails.Add(userDetails);
-                //db.SaveChanges();
-                return new ServiceResponse<IDream>(null, HttpStatusCode.OK, "UserDetails added succesfully!");
+                var dreamVerification = db.Days.FirstOrDefault(x => x.Id == dreamRequest.Id);
+                if (dreamVerification == null || dreamVerification.Dream != null)
+                {
+                    return new ServiceResponse<IDream>(null, HttpStatusCode.BadRequest, "Day does not exist or it already has a dream");
+                }
+                var dream = new Dream
+                {
+                    Id = dreamRequest.Id,
+                    Length = dreamRequest.Length,
+                    Quality = dreamRequest.Quality,
+                    Day = db.Days.FirstOrDefault(x => x.Id == dreamRequest.Id)
+                };
+                var _dream = db.Dreams.Add(dream);
+                db.SaveChanges();
+                return new ServiceResponse<IDream>(new DreamResponse(_dream,typeof(DreamResponse)), HttpStatusCode.OK, "Dream added succesfully!");
             }
         }
 
-        public ServiceResponse<IDream> UpdateDream(IDream userDetailsRequest)
+        public ServiceResponse<IDream> UpdateDream(IDream updateDreamRequest)
         {
             using (DiaryContext db = new DiaryContext())
             {
-                //UserDetails userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
-                //if (userDetailsToUpdate == null)
-                //{
-                //    return new ServiceResponse<IDream>(null, HttpStatusCode.NotFound, "There are not existing user details with given id!");
-                //}
-                //userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
-                //if (userDetailsRequest.Age > 0)
-                //{
-                //    userDetailsToUpdate.Age = userDetailsRequest.Age;
-                //}
-                //if (userDetailsRequest.Height > 0)
-                //{
-                //    userDetailsToUpdate.Height = userDetailsRequest.Height;
-                //}
-                //if (userDetailsRequest.Weight > 0)
-                //{
-                //    userDetailsToUpdate.Weight = userDetailsRequest.Weight;
-                //}
-                //db.SaveChanges();
-                return new ServiceResponse<IDream>(null, HttpStatusCode.OK, "UserDetails added succesfully!");
+                Dream dreamToUpdate = db.Dreams.FirstOrDefault(x => x.Id == updateDreamRequest.Id);
+                if (dreamToUpdate == null)
+                {
+                    return new ServiceResponse<IDream>(null, HttpStatusCode.NotFound, "There is not existing dream with given id!");
+                }
+                dreamToUpdate = db.Dreams.FirstOrDefault(x => x.Id == updateDreamRequest.Id);
+                if (updateDreamRequest.Length > 0)
+                {
+                    dreamToUpdate.Length = updateDreamRequest.Length;
+                }
+                if (!string.IsNullOrEmpty(updateDreamRequest.Quality))
+                {
+                    dreamToUpdate.Quality = updateDreamRequest.Quality;
+                }
+                db.SaveChanges();
+                return new ServiceResponse<IDream>(new DreamResponse(dreamToUpdate,typeof(DreamResponse)), HttpStatusCode.OK, "UserDetails added succesfully!");
             }
         }
     }

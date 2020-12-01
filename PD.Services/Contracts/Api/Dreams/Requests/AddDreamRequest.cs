@@ -17,7 +17,6 @@ namespace PD.Services.Contracts.Api.Dreams.Requests
         public float Length { get; set; }
         [Required]
         public string Quality { get; set; }
-        [Required]
         public virtual Day Day { get; set; }
     }
 }
