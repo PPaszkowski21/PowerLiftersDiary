@@ -38,7 +38,7 @@ namespace PD.Services.Services
                 };
                 Diary _diary = db.Diaries.Add(diary);
                 db.SaveChanges();
-                return new ServiceResponse<IDiary>(null, HttpStatusCode.OK, "Diary added succesfully!");
+                return new ServiceResponse<IDiary>(new DiaryResponse(_diary), HttpStatusCode.OK, "Diary added succesfully!");
             }
         }
 
@@ -56,22 +56,108 @@ namespace PD.Services.Services
 
         public ServiceResponse Delete(int id)
         {
-            throw new NotImplementedException();
+            using (DiaryContext db = new DiaryContext())
+            {
+                if (!db.Diaries.Any(x => x.Id == id))
+                {
+                    return new ServiceResponse(HttpStatusCode.NotFound, "There is not existing user with given id!");
+                }
+
+                var diaryToRemove = db.Diaries.Include(x => x.Days).Include(x => x.User).FirstOrDefault(x => x.Id == id);
+                db.Days.RemoveRange(diaryToRemove.Days);
+                db.Diaries.Remove(diaryToRemove);
+                db.SaveChanges();
+            }
+            return new ServiceResponse(HttpStatusCode.OK, "User deleted!");
         }
 
         public ServiceResponse<IEnumerable<IDiary>> Read()
         {
-            throw new NotImplementedException();
+            List<Diary> diaries = new List<Diary>();
+            using (DiaryContext db = new DiaryContext())
+            {
+                diaries = db.Diaries.Include(x => x.Days).Include(x => x.User).ToList();
+            }
+            List<DiaryResponse> diaryResponses = new List<DiaryResponse>();
+            foreach (var item in diaries)
+            {
+                diaryResponses.Add(new DiaryResponse(item));
+            }
+            return new ServiceResponse<IEnumerable<IDiary>>(diaryResponses, HttpStatusCode.OK, "Table downloaded!");
         }
 
         public ServiceResponse<IDiary> ReadById(int id)
         {
-            throw new NotImplementedException();
+            Diary diary;
+            using (DiaryContext db = new DiaryContext())
+            {
+                if (!db.Diaries.Any(x => x.Id == id))
+                {
+                    return new ServiceResponse<IDiary>(null, HttpStatusCode.NotFound, "There is not existing diary with given id!");
+                }
+                diary = db.Diaries.Include(x => x.Days).Include(x => x.User).FirstOrDefault(x => x.Id == id);
+            }
+            DiaryResponse diaryResponse = new DiaryResponse(diary);
+            return new ServiceResponse<IDiary>(diaryResponse, HttpStatusCode.OK, "Diary downloaded!");
         }
 
-        public ServiceResponse<IDiary> Update(IDiary content)
+        public ServiceResponse<IDiary> Update(IDiary updateDiaryRequest)
         {
-            throw new NotImplementedException();
+            Type myType = updateDiaryRequest.GetType();
+            PropertyInfo property = myType.GetProperty("Id");
+            int id = (int)property.GetValue(updateDiaryRequest);
+            Diary diaryToUpdate;
+            using (DiaryContext db = new DiaryContext())
+            {
+                if (!db.Diaries.Any(x => x.Id == id))
+                {
+                    return new ServiceResponse<IDiary>(null, HttpStatusCode.NotFound, "There is not existing diary with given id!");
+                }
+                diaryToUpdate = db.Diaries.FirstOrDefault(x => x.Id == id);
+                if (!string.IsNullOrEmpty(updateDiaryRequest.Conclusions))
+                {
+                    diaryToUpdate.Conclusions = updateDiaryRequest.Conclusions;
+                }
+                if (updateDiaryRequest.EndDate.Date.Year > 2019)
+                {
+                    diaryToUpdate.EndDate = updateDiaryRequest.EndDate;
+                }
+                if (updateDiaryRequest.StartDate.Date.Year > 2019)
+                {
+                    diaryToUpdate.StartDate = updateDiaryRequest.StartDate;
+                }
+                if (updateDiaryRequest.BenchPressStart != 0)
+                {
+                    diaryToUpdate.BenchPressStart = updateDiaryRequest.BenchPressStart;
+                }
+                if (updateDiaryRequest.SquatStart != 0)
+                {
+                    diaryToUpdate.SquatStart = updateDiaryRequest.SquatStart;
+                }
+                if (updateDiaryRequest.DeadliftStart != 0)
+                {
+                    diaryToUpdate.DeadliftStart = updateDiaryRequest.DeadliftStart;
+                }
+                if (updateDiaryRequest.BenchPressEnd != 0)
+                {
+                    diaryToUpdate.BenchPressEnd = updateDiaryRequest.BenchPressEnd;
+                }
+                if (updateDiaryRequest.SquatEnd != 0)
+                {
+                    diaryToUpdate.SquatEnd = updateDiaryRequest.SquatEnd;
+                }
+                if (updateDiaryRequest.DeadliftEnd != 0)
+                {
+                    diaryToUpdate.DeadliftEnd = updateDiaryRequest.DeadliftEnd;
+                }
+                if (updateDiaryRequest.Progress != 0)
+                {
+                    diaryToUpdate.Progress = updateDiaryRequest.Progress;
+                }
+
+                db.SaveChanges();
+                return new ServiceResponse<IDiary>(new DiaryResponse(diaryToUpdate), HttpStatusCode.OK, "User was updated successfully");
+            }
         }
     }
 }
