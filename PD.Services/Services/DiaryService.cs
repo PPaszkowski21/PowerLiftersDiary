@@ -38,7 +38,7 @@ namespace PD.Services.Services
                 };
                 Diary _diary = db.Diaries.Add(diary);
                 db.SaveChanges();
-                return new ServiceResponse<IDiary>(new DiaryResponse(_diary), HttpStatusCode.OK, "Diary added succesfully!");
+                return new ServiceResponse<IDiary>(new DiaryResponse(_diary,typeof(DiaryResponse)), HttpStatusCode.OK, "Diary added succesfully!");
             }
         }
 
@@ -46,11 +46,10 @@ namespace PD.Services.Services
         {
             using (DiaryContext db = new DiaryContext())
             {
-                if (!db.Diaries.Any(x => x.Id == id))
-                {
+                Diary diary = db.Diaries.Include(x => x.Days).Include(x => x.User).FirstOrDefault(x => x.Id == id);
+                if (diary == null)
                     return null;
-                }
-                return new DiaryResponse(db.Diaries.Include(x=>x.Days).Include(x => x.User).FirstOrDefault(x => x.Id == id));
+                return new DiaryResponse(diary,typeof(DiaryResponse));
             }
         }
 
@@ -81,23 +80,18 @@ namespace PD.Services.Services
             List<DiaryResponse> diaryResponses = new List<DiaryResponse>();
             foreach (var item in diaries)
             {
-                diaryResponses.Add(new DiaryResponse(item));
+                diaryResponses.Add(new DiaryResponse(item,typeof(DiaryResponse)));
             }
             return new ServiceResponse<IEnumerable<IDiary>>(diaryResponses, HttpStatusCode.OK, "Table downloaded!");
         }
 
         public ServiceResponse<IDiary> ReadById(int id)
         {
-            Diary diary;
-            using (DiaryContext db = new DiaryContext())
+            DiaryResponse diaryResponse = GetDiary(id);
+            if(diaryResponse == null)
             {
-                if (!db.Diaries.Any(x => x.Id == id))
-                {
-                    return new ServiceResponse<IDiary>(null, HttpStatusCode.NotFound, "There is not existing diary with given id!");
-                }
-                diary = db.Diaries.Include(x => x.Days).Include(x => x.User).FirstOrDefault(x => x.Id == id);
+                return new ServiceResponse<IDiary>(null, HttpStatusCode.NotFound, "There is not existing diary with given id!");
             }
-            DiaryResponse diaryResponse = new DiaryResponse(diary);
             return new ServiceResponse<IDiary>(diaryResponse, HttpStatusCode.OK, "Diary downloaded!");
         }
 
@@ -156,7 +150,7 @@ namespace PD.Services.Services
                 }
 
                 db.SaveChanges();
-                return new ServiceResponse<IDiary>(new DiaryResponse(diaryToUpdate), HttpStatusCode.OK, "User was updated successfully");
+                return new ServiceResponse<IDiary>(new DiaryResponse(diaryToUpdate,typeof(DiaryResponse)), HttpStatusCode.OK, "User was updated successfully");
             }
         }
     }

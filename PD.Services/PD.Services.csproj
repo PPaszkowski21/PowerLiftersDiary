@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\Api\Days\Requests\AddDayRequest.cs" />
+    <Compile Include="Contracts\Api\Days\Requests\UpdateDayRequest.cs" />
     <Compile Include="Contracts\Api\Days\Responses\DayResponse.cs" />
     <Compile Include="Contracts\Api\Diaries\Requests\AddDiaryRequest.cs" />
     <Compile Include="Contracts\Api\Diaries\Requests\UpdateDiaryRequest.cs" />

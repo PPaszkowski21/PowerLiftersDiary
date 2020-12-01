@@ -14,16 +14,17 @@ namespace PD.Services.Contracts.Api.Days.Responses
         public int Id { get; set; }
         public DiaryResponse Diary { get; set; }
         public DateTime Date { get; set; }
-        //public virtual Dream Dream { get; set; }
-        //public ICollection<TrainingUnit> TrainingUnits { get; set; }
+        public virtual Dream Dream { get; set; }
+        public ICollection<TrainingUnit> TrainingUnits { get; set; }
 
-        public DayResponse(Day day)
+        public DayResponse(Day day, Type type)
         {
             this.Id = day.Id;
-            this.Diary = new DiaryResponse(day.Diary);
+            if (type == typeof(DayResponse))
+            {
+                this.Diary = new DiaryResponse(day.Diary, typeof(DayResponse));
+            }
             this.Date = day.Date;
-            //this.Dream = day.Dream;
-            //this.TrainingUnits = day.TrainingUnits;
         }
     }
 }

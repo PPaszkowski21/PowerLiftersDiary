@@ -1,6 +1,7 @@
 ﻿using PD.Services.Contracts.Api.Days.Responses;
 using PD.Services.Contracts.Api.Users.Responses;
 using PD.Services.Interfaces;
+using PD.Services.Services;
 using PowerlifterDiary.Models;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,13 @@ namespace PD.Services.Contracts.Api.Diaries.Responses
         public float Progress { get; set; }
         public ICollection<DayResponse> Days { get; set; }
 
-        public DiaryResponse(Diary diary)
+        public DiaryResponse(Diary diary, Type type)
         {
             Id = diary.Id;
-            UserId = diary.User.Id;
+            if (type == typeof(DiaryResponse))
+            {
+                UserId = diary.User.Id;
+            }
             StartDate = diary.StartDate;
             EndDate = diary.EndDate;
             Conclusions = diary.Conclusions;
@@ -40,12 +44,16 @@ namespace PD.Services.Contracts.Api.Diaries.Responses
             SquatEnd = diary.SquatEnd;
             DeadliftEnd = diary.DeadliftEnd;
             Progress = diary.Progress;
-            Days = new List<DayResponse>();
-            if(diary.Days != null)
+            if(type == typeof(DiaryResponse))
             {
-                foreach (var item in diary.Days)
+                Days = new List<DayResponse>();
+                if (diary.Days != null)
                 {
-                    Days.Add(new DayResponse(item));
+                    DayService dayService = new DayService();
+                    foreach (var day in diary.Days)
+                    {
+                        Days.Add(dayService.GetDay(day.Id));
+                    }
                 }
             }
         }

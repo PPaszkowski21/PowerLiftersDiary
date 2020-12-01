@@ -1,5 +1,6 @@
 ﻿using PD.Services.Contracts.Api.Days.Requests;
 using PD.Services.Contracts.Api.Days.Responses;
+using PD.Services.Contracts.Api.Diaries.Responses;
 using PD.Services.Interfaces;
 using PowerlifterDiary.Models;
 using System;
@@ -34,114 +35,83 @@ namespace PD.Services.Services
                 };
                 Day _day = db.Days.Add(day);
                 db.SaveChanges();
-                return new ServiceResponse<IDay>(new DayResponse(_day), HttpStatusCode.OK, "Day added succesfully!");
+                return new ServiceResponse<IDay>(new DayResponse(_day,typeof(DayResponse)), HttpStatusCode.OK, "Day added succesfully!");
             }
         }
 
+        public DayResponse GetDay(int id)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                Day day = db.Days.Include("Diary").Include("Dream").Include("TrainingUnits").FirstOrDefault(x => x.Id == id);
+                if (day == null)
+                    return null;
+                return new DayResponse(day, typeof(DayResponse));
+            }
+        }
 
         public ServiceResponse Delete(int id)
         {
-            throw new NotImplementedException();
+            using (DiaryContext db = new DiaryContext())
+            {
+                if (!db.Days.Any(x => x.Id == id))
+                {
+                    return new ServiceResponse(HttpStatusCode.NotFound, "There is not existing day with given id!");
+                }
+
+                var dayToRemove = db.Days.Include("Diary").Include("Dream").Include("TrainingUnits").FirstOrDefault(x => x.Id == id);
+                db.TrainingUnits.RemoveRange(dayToRemove.TrainingUnits);
+                db.Dreams.Remove(dayToRemove.Dream);
+                db.Days.Remove(dayToRemove);
+                db.SaveChanges();
+            }
+            return new ServiceResponse(HttpStatusCode.OK, "Day deleted!");
         }
 
         public ServiceResponse<IEnumerable<IDay>> Read()
         {
-            throw new NotImplementedException();
+            List<Day> days = new List<Day>();
+            using (DiaryContext db = new DiaryContext())
+            {
+                days = db.Days.Include("Diary").Include("Dream").Include("TrainingUnits").ToList();
+            }
+            List<DayResponse> dayResponses = new List<DayResponse>();
+            foreach (var item in days)
+            {
+                dayResponses.Add(new DayResponse(item,typeof(DayResponse)));
+            }
+            return new ServiceResponse<IEnumerable<IDay>>(dayResponses, HttpStatusCode.OK, "Table downloaded!");
         }
 
         public ServiceResponse<IDay> ReadById(int id)
         {
-            throw new NotImplementedException();
+            DayResponse dayResponse = GetDay(id);
+            if (dayResponse == null)
+            {
+                return new ServiceResponse<IDay>(null, HttpStatusCode.NotFound, "There is not existing day with given id!");
+            }
+            return new ServiceResponse<IDay>(dayResponse, HttpStatusCode.OK, "Diary downloaded!");
         }
-
-        public ServiceResponse<IDay> Update(IDay content)
+        public ServiceResponse<IDay> Update(IDay updateDayRequest)
         {
-            throw new NotImplementedException();
+            Type myType = updateDayRequest.GetType();
+            PropertyInfo property = myType.GetProperty("Id");
+            int id = (int)property.GetValue(updateDayRequest);
+            Day dayToUpdate;
+            using (DiaryContext db = new DiaryContext())
+            {
+                if (!db.Days.Any(x => x.Id == id))
+                {
+                    return new ServiceResponse<IDay>(null, HttpStatusCode.NotFound, "There is not existing day with given id!");
+                }
+                dayToUpdate = db.Days.FirstOrDefault(x => x.Id == id);
+                if (updateDayRequest.Date.Year > 2019)
+                {
+                    dayToUpdate.Date = updateDayRequest.Date;
+                }
+                db.SaveChanges();
+                return new ServiceResponse<IDay>(new DayResponse(dayToUpdate,typeof(DayResponse)), HttpStatusCode.OK, "User was updated successfully");
+            }
         }
-
-
-
-        //public ServiceResponse<IEnumerable<MonsterResponse>> Read()
-        //{
-        //    var monsters = new List<Monster>();
-        //    var monsters2 = new List<MonsterResponse>();
-        //    using (MonstersContext db = new MonstersContext())
-        //    {
-        //        monsters = db.Monsters.ToList();
-        //    }
-        //    foreach (var item in monsters)
-        //    {
-        //        monsters2.Add(new MonsterResponse(item));
-        //    }
-        //    return new ServiceResponse<IEnumerable<MonsterResponse>>(monsters2, HttpStatusCode.OK, "Table downloaded!");
-        //}
-
-        //public ServiceResponse<MonsterResponse> ReadById(int id)
-        //{
-        //    MonsterResponse monster;
-        //    using (MonstersContext db = new MonstersContext())
-        //    {
-        //        if (!db.Monsters.Any(x => x.Id == id))
-        //        {
-        //            return new ServiceResponse<MonsterResponse>(null, HttpStatusCode.NotFound, "There is not existing monster with given id!");
-        //        }
-        //        monster = new MonsterResponse(db.Monsters.FirstOrDefault(x => x.Id == id));
-        //    }
-        //    return new ServiceResponse<MonsterResponse>(monster, HttpStatusCode.OK, "Monster downloaded!");
-        //}
-
-        //public ServiceResponse<MonsterResponse> Update(MonsterUpdateRequest monster)
-        //{
-        //    using (MonstersContext db = new MonstersContext())
-        //    {
-        //        try
-        //        {
-        //            var monsterToUpdate = db.Monsters.FirstOrDefault(x => x.Id == monster.Id);
-        //            if (monster.HP.HasValue)
-        //            {
-        //                monsterToUpdate.HP = monster.HP.Value;
-        //            }
-        //            if (monster.Exp.HasValue)
-        //            {
-        //                monsterToUpdate.Exp = monster.Exp.Value;
-        //            }
-        //            if (!string.IsNullOrEmpty(monster.Name))
-        //            {
-        //                monsterToUpdate.Name = monster.Name;
-        //            }
-        //            if (monster.MovementSpeed.HasValue)
-        //            {
-        //                monsterToUpdate.MovementSpeed = monster.MovementSpeed.Value;
-        //            }
-        //            if (monster.SeeingInvisible != null)
-        //            {
-        //                monsterToUpdate.SeeingInvisible = monster.SeeingInvisible.Value;
-        //            }
-        //            if (!string.IsNullOrEmpty(monster.ImageLink))
-        //            {
-        //                monsterToUpdate.ImageLink = monster.ImageLink;
-        //            }
-        //            db.SaveChanges();
-        //            return new ServiceResponse<MonsterResponse>(new MonsterResponse(monsterToUpdate), HttpStatusCode.OK, "Monster updated succesfully!");
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return new ServiceResponse<MonsterResponse>(null, HttpStatusCode.NotFound, "There isn't existing monster with given id");
-        //        }
-        //    }
-        //}
-        //public ServiceResponse Delete(int id)
-        //{
-        //    using (MonstersContext db = new MonstersContext())
-        //    {
-        //        if (!db.Monsters.Any(x => x.Id == id))
-        //        {
-        //            return new ServiceResponse(HttpStatusCode.NotFound, "There is not existing monster with given id!");
-        //        }
-        //        db.Monsters.Remove(db.Monsters.FirstOrDefault(x => x.Id == id));
-        //        db.SaveChanges();
-        //    }
-        //    return new ServiceResponse(HttpStatusCode.OK, "Monster deleted!");
-        //}
     }
 }

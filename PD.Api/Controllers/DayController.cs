@@ -30,39 +30,39 @@ namespace PD.Api.Controllers
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
-        //[HttpPut]
-        //[Route("update")]
-        //public IHttpActionResult Update(MonsterUpdateRequest monster)
-        //{
-        //    if (monster == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-        //    var result = _crudService.Update(monster);
-        //    return ResponseMessage(CreateCustomResponseMessage(result));
-        //}
+        [HttpPut]
+        [Route("update")]
+        public IHttpActionResult Update(UpdateDayRequest day)
+        {
+            if (day == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _crudService.Update(day);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
 
-        //[HttpGet]
-        //[Route("read")]
-        //public IHttpActionResult Read()
-        //{
-        //    var result = _crudService.Read();
-        //    return ResponseMessage(CreateCustomResponseMessage(result));
-        //}
+        [HttpGet]
+        [Route("read")]
+        public IHttpActionResult Read()
+        {
+            var result = _crudService.Read();
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
 
-        //[HttpGet]
-        //[Route("readbyid")]
-        //public IHttpActionResult ReadById(int id)
-        //{
-        //    if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-        //    var result = _crudService.ReadById(id);
-        //    return ResponseMessage(CreateCustomResponseMessage(result));
-        //}
+        [HttpGet]
+        [Route("get")]
+        public IHttpActionResult ReadById(int id)
+        {
+            if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _crudService.ReadById(id);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
 
-        //[HttpDelete]
-        //[Route("delete")]
-        //public IHttpActionResult Delete(int id)
-        //{
-        //    if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-        //    var result = _crudService.Delete(id);
-        //    return ResponseMessage(CreateCustomResponseMessage(result));
-        //}
+        [HttpDelete]
+        [Route("delete")]
+        public IHttpActionResult Delete(int id)
+        {
+            if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _crudService.Delete(id);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
     }
 }
