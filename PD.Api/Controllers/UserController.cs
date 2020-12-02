@@ -1,24 +1,16 @@
-﻿using PD.Services;
-using PD.Services.Contracts.Api.UserDetails.Requests;
+﻿using PD.Services.Contracts.Api.UserDetails.Requests;
 using PD.Services.Contracts.Api.Users.Requests;
-using PD.Services.Interfaces;
 using PD.Services.Services;
-using PowerlifterDiary.Models;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Http;
 
 namespace PD.Api.Controllers
 {
-    
+
     [RoutePrefix("user")]
     public class UserController : BaseApiController
     {
-        private readonly ICrudService<ICustomUser> _userService;
+        private readonly UserService _userService;
         public UserController()
         {
             this._userService = new UserService();
@@ -30,7 +22,7 @@ namespace PD.Api.Controllers
         [Route("authorization/test")]
         public IHttpActionResult Test(AddUserRequest user)
         {
-            _userService
+            var currentUser = _userService.GetUserModelFromRequest(Request);
             return Ok();
         }
 

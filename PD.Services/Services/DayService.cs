@@ -1,22 +1,19 @@
 ﻿using PD.Services.Contracts.Api.Days.Requests;
 using PD.Services.Contracts.Api.Days.Responses;
-using PD.Services.Contracts.Api.Diaries.Responses;
+using PD.Services.Contracts.Api.Dreams.Requests;
 using PD.Services.Contracts.Api.Dreams.Responses;
-using PD.Services.Interfaces;
 using PowerlifterDiary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PD.Services.Services
 {
-    public class DayService : ICrudService<IDay>
+    public class DayService
     {
-        public ServiceResponse<IDay> Add(IDay dayRequest)
+        public ServiceResponse<DayResponse> Add(AddDayRequest dayRequest)
         {
             Type myType = dayRequest.GetType();
             PropertyInfo property = myType.GetProperty("DiaryId");
@@ -26,7 +23,7 @@ namespace PD.Services.Services
                 var diary = db.Diaries.FirstOrDefault(x => x.Id == id);
                 if (diary == null)
                 {
-                    return new ServiceResponse<IDay>(null, HttpStatusCode.NotFound, "Unable to find the diary!");
+                    return new ServiceResponse<DayResponse>(null, HttpStatusCode.NotFound, "Unable to find the diary!");
                 }
 
                 var day = new Day
@@ -36,7 +33,7 @@ namespace PD.Services.Services
                 };
                 Day _day = db.Days.Add(day);
                 db.SaveChanges();
-                return new ServiceResponse<IDay>(new DayResponse(_day,typeof(DayResponse)), HttpStatusCode.OK, "Day added succesfully!");
+                return new ServiceResponse<DayResponse>(new DayResponse(_day,typeof(DayResponse)), HttpStatusCode.OK, "Day added succesfully!");
             }
         }
 
@@ -69,7 +66,7 @@ namespace PD.Services.Services
             return new ServiceResponse(HttpStatusCode.OK, "Day deleted!");
         }
 
-        public ServiceResponse<IEnumerable<IDay>> Read()
+        public ServiceResponse<IEnumerable<DayResponse>> Read()
         {
             List<Day> days = new List<Day>();
             using (DiaryContext db = new DiaryContext())
@@ -81,19 +78,19 @@ namespace PD.Services.Services
             {
                 dayResponses.Add(new DayResponse(item,typeof(DayResponse)));
             }
-            return new ServiceResponse<IEnumerable<IDay>>(dayResponses, HttpStatusCode.OK, "Table downloaded!");
+            return new ServiceResponse<IEnumerable<DayResponse>>(dayResponses, HttpStatusCode.OK, "Table downloaded!");
         }
 
-        public ServiceResponse<IDay> ReadById(int id)
+        public ServiceResponse<DayResponse> ReadById(int id)
         {
             DayResponse dayResponse = GetDay(id);
             if (dayResponse == null)
             {
-                return new ServiceResponse<IDay>(null, HttpStatusCode.NotFound, "There is not existing day with given id!");
+                return new ServiceResponse<DayResponse>(null, HttpStatusCode.NotFound, "There is not existing day with given id!");
             }
-            return new ServiceResponse<IDay>(dayResponse, HttpStatusCode.OK, "Diary downloaded!");
+            return new ServiceResponse<DayResponse>(dayResponse, HttpStatusCode.OK, "Diary downloaded!");
         }
-        public ServiceResponse<IDay> Update(IDay updateDayRequest)
+        public ServiceResponse<DayResponse> Update(UpdateDayRequest updateDayRequest)
         {
             Type myType = updateDayRequest.GetType();
             PropertyInfo property = myType.GetProperty("Id");
@@ -103,7 +100,7 @@ namespace PD.Services.Services
             {
                 if (!db.Days.Any(x => x.Id == id))
                 {
-                    return new ServiceResponse<IDay>(null, HttpStatusCode.NotFound, "There is not existing day with given id!");
+                    return new ServiceResponse<DayResponse>(null, HttpStatusCode.NotFound, "There is not existing day with given id!");
                 }
                 dayToUpdate = db.Days.FirstOrDefault(x => x.Id == id);
                 if (updateDayRequest.Date.Year > 2019)
@@ -111,18 +108,18 @@ namespace PD.Services.Services
                     dayToUpdate.Date = updateDayRequest.Date;
                 }
                 db.SaveChanges();
-                return new ServiceResponse<IDay>(new DayResponse(dayToUpdate,typeof(DayResponse)), HttpStatusCode.OK, "User was updated successfully");
+                return new ServiceResponse<DayResponse>(new DayResponse(dayToUpdate,typeof(DayResponse)), HttpStatusCode.OK, "User was updated successfully");
             }
         }
 
-        public ServiceResponse<IDream> AddDream(IDream dreamRequest)
+        public ServiceResponse<DreamResponse> AddDream(AddDreamRequest dreamRequest)
         {
             using (DiaryContext db = new DiaryContext())
             {
                 var dreamVerification = db.Days.FirstOrDefault(x => x.Id == dreamRequest.Id);
                 if (dreamVerification == null || dreamVerification.Dream != null)
                 {
-                    return new ServiceResponse<IDream>(null, HttpStatusCode.BadRequest, "Day does not exist or it already has a dream");
+                    return new ServiceResponse<DreamResponse>(null, HttpStatusCode.BadRequest, "Day does not exist or it already has a dream");
                 }
                 var dream = new Dream
                 {
@@ -133,18 +130,18 @@ namespace PD.Services.Services
                 };
                 var _dream = db.Dreams.Add(dream);
                 db.SaveChanges();
-                return new ServiceResponse<IDream>(new DreamResponse(_dream,typeof(DreamResponse)), HttpStatusCode.OK, "Dream added succesfully!");
+                return new ServiceResponse<DreamResponse>(new DreamResponse(_dream,typeof(DreamResponse)), HttpStatusCode.OK, "Dream added succesfully!");
             }
         }
 
-        public ServiceResponse<IDream> UpdateDream(IDream updateDreamRequest)
+        public ServiceResponse<DreamResponse> UpdateDream(UpdateDreamRequest updateDreamRequest)
         {
             using (DiaryContext db = new DiaryContext())
             {
                 Dream dreamToUpdate = db.Dreams.FirstOrDefault(x => x.Id == updateDreamRequest.Id);
                 if (dreamToUpdate == null)
                 {
-                    return new ServiceResponse<IDream>(null, HttpStatusCode.NotFound, "There is not existing dream with given id!");
+                    return new ServiceResponse<DreamResponse>(null, HttpStatusCode.NotFound, "There is not existing dream with given id!");
                 }
                 dreamToUpdate = db.Dreams.FirstOrDefault(x => x.Id == updateDreamRequest.Id);
                 if (updateDreamRequest.Length > 0)
@@ -156,7 +153,7 @@ namespace PD.Services.Services
                     dreamToUpdate.Quality = updateDreamRequest.Quality;
                 }
                 db.SaveChanges();
-                return new ServiceResponse<IDream>(new DreamResponse(dreamToUpdate,typeof(DreamResponse)), HttpStatusCode.OK, "UserDetails added succesfully!");
+                return new ServiceResponse<DreamResponse>(new DreamResponse(dreamToUpdate,typeof(DreamResponse)), HttpStatusCode.OK, "UserDetails added succesfully!");
             }
         }
     }

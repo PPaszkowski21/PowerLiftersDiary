@@ -1,33 +1,26 @@
-﻿using PowerlifterDiary.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using PD.Services;
-using PD.Services.Services;
-using System.Web.Http;
-using System.Net;
-using PD.Services.Contracts.Api.Days.Requests;
-using PD.Services.Interfaces;
+﻿using PD.Services.Contracts.Api.Days.Requests;
 using PD.Services.Contracts.Api.Dreams.Requests;
+using PD.Services.Services;
+using System.Net;
+using System.Web.Http;
 
 namespace PD.Api.Controllers
 {
     [RoutePrefix("day")]
     public class DayController : BaseApiController
     {
-        private readonly ICrudService<IDay> _crudService;
+        private readonly DayService _dayService;
 
         public DayController()
         {
-            this._crudService = new DayService();
+            this._dayService = new DayService();
         }
         [HttpPost]
         [Route("create")]
         public IHttpActionResult Create(AddDayRequest day)
         {
             if (day == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var result = _crudService.Add(day);
+            var result = _dayService.Add(day);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
@@ -36,7 +29,7 @@ namespace PD.Api.Controllers
         public IHttpActionResult Update(UpdateDayRequest day)
         {
             if (day == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var result = _crudService.Update(day);
+            var result = _dayService.Update(day);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
@@ -44,7 +37,7 @@ namespace PD.Api.Controllers
         [Route("read")]
         public IHttpActionResult Read()
         {
-            var result = _crudService.Read();
+            var result = _dayService.Read();
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
@@ -53,7 +46,7 @@ namespace PD.Api.Controllers
         public IHttpActionResult ReadById(int id)
         {
             if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var result = _crudService.ReadById(id);
+            var result = _dayService.ReadById(id);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
@@ -62,7 +55,7 @@ namespace PD.Api.Controllers
         public IHttpActionResult Delete(int id)
         {
             if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var result = _crudService.Delete(id);
+            var result =_dayService.Delete(id);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
@@ -71,8 +64,7 @@ namespace PD.Api.Controllers
         public IHttpActionResult AddDream(AddDreamRequest day)
         {
             if (day == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var userService = (DayService)_crudService;
-            var result = userService.AddDream(day);
+            var result = _dayService.AddDream(day);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
@@ -81,8 +73,7 @@ namespace PD.Api.Controllers
         public IHttpActionResult UpdateDream(UpdateDreamRequest day)
         {
             if (day == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var userService = (DayService)_crudService;
-            var result = userService.UpdateDream(day);
+            var result = _dayService.UpdateDream(day);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
     }

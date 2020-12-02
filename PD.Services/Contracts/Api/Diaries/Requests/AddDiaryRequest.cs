@@ -1,14 +1,9 @@
-﻿using PD.Services.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PD.Services.Contracts.Api.Diaries.Requests
 {
-    public class AddDiaryRequest : IDiary
+    public class AddDiaryRequest
     {
         [Required]
         public int UserId { get; set; }

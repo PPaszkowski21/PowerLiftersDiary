@@ -1,14 +1,8 @@
-﻿using PD.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PD.Services.Contracts.Api.Dreams.Requests
 {
-    public class UpdateDreamRequest : IDream
+    public class UpdateDreamRequest
     {
         [Required]
         public int Id { get; set; }

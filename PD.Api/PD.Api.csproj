@@ -130,6 +130,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Attributes\AuthFilter.cs" />
+    <Compile Include="Attributes\CustomHeaderFilter.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\DayController.cs" />
     <Compile Include="Controllers\DiaryController.cs" />

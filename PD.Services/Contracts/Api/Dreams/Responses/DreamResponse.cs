@@ -1,11 +1,10 @@
 ﻿using PD.Services.Contracts.Api.Days.Responses;
-using PD.Services.Interfaces;
 using PowerlifterDiary.Models;
 using System;
 
 namespace PD.Services.Contracts.Api.Dreams.Responses
 {
-    public class DreamResponse : IDream
+    public class DreamResponse
     {
         public int Id { get; set; }
         public float Length { get; set; }

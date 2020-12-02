@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using PD.Api.Attributes;
 using System.Web.Http;
 
 namespace PD.Api
@@ -19,6 +17,8 @@ namespace PD.Api
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Filters.Add(new AuthFilter());
         }
     }
 }

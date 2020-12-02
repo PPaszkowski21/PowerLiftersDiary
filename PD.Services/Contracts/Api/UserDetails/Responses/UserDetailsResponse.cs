@@ -1,11 +1,10 @@
 ﻿using PD.Services.Contracts.Api.Users.Responses;
-using PD.Services.Interfaces;
 using PowerlifterDiary.Models;
 using UsersDetails = PowerlifterDiary.Models.UserDetails;
 
 namespace PD.Services.Contracts.Api.UserDetails.Responses
 {
-    public class UserDetailsResponse : IUserDetails
+    public class UserDetailsResponse
     {
         public int UserId { get; set; }
         public int Height { get; set; }

@@ -9,6 +9,7 @@ namespace PD.Api
 {
     public class Startup
     {
+        public static OAuthBearerAuthenticationOptions OAuthBearerOptions { get; private set; }
         public void Configuration(IAppBuilder app)
         {
             HttpConfiguration config = new HttpConfiguration();
@@ -28,8 +29,9 @@ namespace PD.Api
             };
 
             // Token Generation
+            OAuthBearerOptions = new OAuthBearerAuthenticationOptions();
             app.UseOAuthAuthorizationServer(OAuthServerOptions);
-            app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
+            app.UseOAuthBearerAuthentication(OAuthBearerOptions);
 
         }
     }

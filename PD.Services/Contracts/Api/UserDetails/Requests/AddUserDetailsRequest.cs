@@ -1,9 +1,8 @@
-﻿using PD.Services.Interfaces;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PD.Services.Contracts.Api.UserDetails.Requests
 {
-    public class AddUserDetailsRequest : IUserDetails
+    public class AddUserDetailsRequest
     {
         [Required]
         public int UserId { get; set; }

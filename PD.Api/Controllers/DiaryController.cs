@@ -1,23 +1,14 @@
-﻿using PD.Services;
-using PD.Services.Contracts.Api.Diaries.Requests;
-using PD.Services.Interfaces;
+﻿using PD.Services.Contracts.Api.Diaries.Requests;
 using PD.Services.Services;
-using PowerlifterDiary.Models;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
 
 namespace PD.Api.Controllers
 {
     [RoutePrefix("diary")]
     public class DiaryController : BaseApiController
     {
-        private readonly ICrudService<IDiary> _diaryService;
+        private readonly DiaryService _diaryService;
 
         public DiaryController()
         {

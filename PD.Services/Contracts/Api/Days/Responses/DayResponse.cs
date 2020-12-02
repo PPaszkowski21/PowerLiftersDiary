@@ -1,13 +1,12 @@
 ﻿using PD.Services.Contracts.Api.Diaries.Responses;
 using PD.Services.Contracts.Api.Dreams.Responses;
-using PD.Services.Interfaces;
 using PowerlifterDiary.Models;
 using System;
 using System.Collections.Generic;
 
 namespace PD.Services.Contracts.Api.Days.Responses
 {
-    public class DayResponse : IDay
+    public class DayResponse
     {
         public DayResponse(Day day, Type type)
         {

@@ -1,15 +1,9 @@
-﻿using PD.Services.Interfaces;
-using PowerlifterDiary.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PD.Services.Contracts.Api.Days.Requests
 {
-    public class AddDayRequest : IDay
+    public class AddDayRequest
     {
         [Required]
         public int DiaryId { get; set; }

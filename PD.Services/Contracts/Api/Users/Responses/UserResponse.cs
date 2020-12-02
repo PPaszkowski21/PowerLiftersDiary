@@ -1,18 +1,12 @@
 ﻿using PD.Services.Contracts.Api.Diaries.Responses;
 using PD.Services.Contracts.Api.UserDetails.Responses;
-using PD.Services.Interfaces;
 using PD.Services.Services;
 using PowerlifterDiary.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PD.Services.Contracts.Api.Users.Responses
 {
-    public class UserResponse : ICustomUser
+    public class UserResponse
     {
         public UserResponse()
         {

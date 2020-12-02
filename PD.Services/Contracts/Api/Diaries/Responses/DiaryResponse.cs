@@ -1,17 +1,12 @@
 ﻿using PD.Services.Contracts.Api.Days.Responses;
-using PD.Services.Contracts.Api.Users.Responses;
-using PD.Services.Interfaces;
 using PD.Services.Services;
 using PowerlifterDiary.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PD.Services.Contracts.Api.Diaries.Responses
 {
-    public class DiaryResponse : IDiary
+    public class DiaryResponse
     {
         public int Id { get; set; }
         public int UserId { get; set; }

@@ -1,15 +1,9 @@
-﻿using PD.Services.Interfaces;
-using PowerlifterDiary.Models;
-using System;
-using System.Collections.Generic;
+﻿using PowerlifterDiary.Models;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PD.Services.Contracts.Api.Dreams.Requests
 {
-    public class AddDreamRequest : IDream
+    public class AddDreamRequest
     {
         [Required]
         public int Id { get; set; }

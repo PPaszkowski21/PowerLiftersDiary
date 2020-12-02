@@ -102,13 +102,6 @@
     <Compile Include="Contracts\Api\Users\Requests\AddUserRequest.cs" />
     <Compile Include="Contracts\Api\Users\Requests\UpdateUserRequest.cs" />
     <Compile Include="Contracts\Api\Users\Responses\UserResponse.cs" />
-    <Compile Include="Interfaces\ICrudService.cs" />
-    <Compile Include="Interfaces\IDay.cs" />
-    <Compile Include="Interfaces\IDiary.cs" />
-    <Compile Include="Interfaces\IDream.cs" />
-    <Compile Include="Interfaces\ITrainingUnit.cs" />
-    <Compile Include="Interfaces\ICustomUser.cs" />
-    <Compile Include="Interfaces\IUserDetails.cs" />
     <Compile Include="ServiceResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DayService.cs" />

@@ -1,9 +1,8 @@
-﻿using PD.Services.Interfaces;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PD.Services.Contracts.Api.TrainingUnits.Requests
 {
-    public class AddTrainingUnitRequest : ITrainingUnit
+    public class AddTrainingUnitRequest
     {
         [Required]
         public int DayId { get; set; }

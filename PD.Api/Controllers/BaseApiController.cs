@@ -1,18 +1,14 @@
-﻿using PD.Services;
-using PowerlifterDiary.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using PD.Api.Attributes;
+using PD.Services;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Serialization;
-using System.Web;
 using System.Web.Http;
 using System.Web.Script.Serialization;
 
 namespace PD.Api.Controllers
 {
-    [Authorize]
+    [AuthFilter]
+    [CustomHeaderFilter]
     public class BaseApiController : ApiController
     {
         public HttpResponseMessage CreateCustomResponseMessage(ServiceResponse result)
