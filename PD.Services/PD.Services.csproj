@@ -71,12 +71,14 @@
     <Compile Include="Interfaces\IDay.cs" />
     <Compile Include="Interfaces\IDiary.cs" />
     <Compile Include="Interfaces\IDream.cs" />
+    <Compile Include="Interfaces\ITrainingUnit.cs" />
     <Compile Include="Interfaces\IUser.cs" />
     <Compile Include="Interfaces\IUserDetails.cs" />
     <Compile Include="ServiceResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DayService.cs" />
     <Compile Include="Services\DiaryService.cs" />
+    <Compile Include="Services\TrainingService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -89,7 +91,10 @@
       <Name>PD.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Contracts\Api\TrainingUnits\Requests\" />
+    <Folder Include="Contracts\Api\TrainingUnits\Responses\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
