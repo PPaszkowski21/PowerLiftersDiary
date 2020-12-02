@@ -12,6 +12,7 @@ using System.Web.Script.Serialization;
 
 namespace PD.Api.Controllers
 {
+    [Authorize]
     public class BaseApiController : ApiController
     {
         public HttpResponseMessage CreateCustomResponseMessage(ServiceResponse result)

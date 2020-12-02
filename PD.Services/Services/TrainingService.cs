@@ -1,8 +1,10 @@
-﻿using PD.Services.Interfaces;
+﻿using PD.Services.Contracts.Api.TrainingUnits.Responses;
+using PD.Services.Interfaces;
 using PowerlifterDiary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,40 +14,39 @@ namespace PD.Services.Services
     public class TrainingService : ICrudService<ITrainingUnit>
     {
 
-        //public ServiceResponse<ITrainingUnit> Add(ITrainingUnit dayRequest)
-        //{
-        //    Type myType = dayRequest.GetType();
-        //    PropertyInfo property = myType.GetProperty("Id");
-        //    int id = (int)property.GetValue(dayRequest);
-        //    using (DiaryContext db = new DiaryContext())
-        //    {
-        //        var diary = db.Diaries.FirstOrDefault(x => x.Id == id);
-        //        if (diary == null)
-        //        {
-        //            return new ServiceResponse<IDay>(null, HttpStatusCode.NotFound, "Unable to find the diary!");
-        //        }
+        public ServiceResponse<ITrainingUnit> Add(ITrainingUnit trainingUnitRequest)
+        {
+            Type myType = trainingUnitRequest.GetType();
+            PropertyInfo property = myType.GetProperty("DayId");
+            int id = (int)property.GetValue(trainingUnitRequest);
+            using (DiaryContext db = new DiaryContext())
+            {
+                var day = db.Days.FirstOrDefault(x => x.Id == id);
+                if (day == null)
+                {
+                    return new ServiceResponse<ITrainingUnit>(null, HttpStatusCode.NotFound, "Unable to find the day!");
+                }
 
-        //        var day = new Day
-        //        {
-        //            Date = dayRequest.Date,
-        //            Diary = diary,
-        //        };
-        //        Day _day = db.Days.Add(day);
-        //        db.SaveChanges();
-        //        return new ServiceResponse<IDay>(new DayResponse(_day, typeof(DayResponse)), HttpStatusCode.OK, "Day added succesfully!");
-        //    }
-        //}
+                var trainingUnit = new TrainingUnit
+                {
+                    Day = day
+                };
+                TrainingUnit _trainingUnit = db.TrainingUnits.Add(trainingUnit);
+                db.SaveChanges();
+                return new ServiceResponse<ITrainingUnit>(new TrainingUnitResponse(_trainingUnit,typeof(TrainingUnitResponse)), HttpStatusCode.OK, "Day added succesfully!");
+            }
+        }
 
-        //public DayResponse GetDay(int id)
-        //{
-        //    using (DiaryContext db = new DiaryContext())
-        //    {
-        //        Day day = db.Days.Include("Diary").Include("Dream").Include("TrainingUnits").FirstOrDefault(x => x.Id == id);
-        //        if (day == null)
-        //            return null;
-        //        return new DayResponse(day, typeof(DayResponse));
-        //    }
-        //}
+        public TrainingUnitResponse GetTrainingUnit(int id)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                TrainingUnit trainingUnit = db.TrainingUnits.Include("Day").Include("ExerciseTrainings").FirstOrDefault(x => x.Id == id);
+                if (trainingUnit == null)
+                    return null;
+                return new TrainingUnitResponse(trainingUnit, typeof(TrainingUnitResponse));
+            }
+        }
 
         //public ServiceResponse Delete(int id)
         //{
@@ -80,15 +81,15 @@ namespace PD.Services.Services
         //    return new ServiceResponse<IEnumerable<IDay>>(dayResponses, HttpStatusCode.OK, "Table downloaded!");
         //}
 
-        //public ServiceResponse<IDay> ReadById(int id)
-        //{
-        //    DayResponse dayResponse = GetDay(id);
-        //    if (dayResponse == null)
-        //    {
-        //        return new ServiceResponse<IDay>(null, HttpStatusCode.NotFound, "There is not existing day with given id!");
-        //    }
-        //    return new ServiceResponse<IDay>(dayResponse, HttpStatusCode.OK, "Diary downloaded!");
-        //}
+        public ServiceResponse<ITrainingUnit> ReadById(int id)
+        {
+            TrainingUnitResponse trainingUnitResponse = GetTrainingUnit(id);
+            if (trainingUnitResponse == null)
+            {
+                return new ServiceResponse<ITrainingUnit>(null, HttpStatusCode.NotFound, "There is not existing training unit with given id!");
+            }
+            return new ServiceResponse<ITrainingUnit>(trainingUnitResponse, HttpStatusCode.OK, "Diary downloaded!");
+        }
         //public ServiceResponse<IDay> Update(IDay updateDayRequest)
         //{
         //    Type myType = updateDayRequest.GetType();
@@ -155,10 +156,6 @@ namespace PD.Services.Services
         //        return new ServiceResponse<IDream>(new DreamResponse(dreamToUpdate, typeof(DreamResponse)), HttpStatusCode.OK, "UserDetails added succesfully!");
         //    }
         //}
-        public ServiceResponse<ITrainingUnit> Add(ITrainingUnit content)
-        {
-            throw new NotImplementedException();
-        }
 
         public ServiceResponse Delete(int id)
         {
@@ -170,12 +167,17 @@ namespace PD.Services.Services
             throw new NotImplementedException();
         }
 
-        public ServiceResponse<ITrainingUnit> ReadById(int id)
+        public ServiceResponse<ITrainingUnit> Update(ITrainingUnit content)
         {
             throw new NotImplementedException();
         }
 
-        public ServiceResponse<ITrainingUnit> Update(ITrainingUnit content)
+        public ServiceResponse<ITrainingUnit> ReadById(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ServiceResponse Delete(string id)
         {
             throw new NotImplementedException();
         }

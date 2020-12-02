@@ -10,6 +10,6 @@ namespace PowerlifterDiary.Models
         public virtual Diary Diary { get; set; }
         public DateTime Date { get; set; }
         public virtual Dream Dream { get; set; }
-        public ICollection<TrainingUnit> TrainingUnits { get; set; }
+        public virtual ICollection<TrainingUnit> TrainingUnits { get; set; }
     }
 }

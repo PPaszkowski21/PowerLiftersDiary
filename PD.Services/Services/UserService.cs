@@ -1,4 +1,8 @@
-﻿using PD.Services.Contracts.Api.UserDetails.Responses;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin.Security;
+using PD.Data.Models;
+using PD.Services.Contracts.Api.UserDetails.Responses;
 using PD.Services.Contracts.Api.Users.Responses;
 using PD.Services.Interfaces;
 using PowerlifterDiary.Models;
@@ -7,26 +11,32 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 
 namespace PD.Services.Services
 {
-    public class UserService : ICrudService<IUser>
+    public class UserService : ICrudService<ICustomUser>
     {
-        public ServiceResponse<IUser> Add(IUser userRequest)
+        public ServiceResponse<ICustomUser> Add(ICustomUser userRequest)
         {
-            var user = new User
-            {
-                Name = userRequest.Name,
-                Surname = userRequest.Surname,
-                City = userRequest.City,
-                UserDetails = null
-            };
             using (DiaryContext db = new DiaryContext())
             {
-                var _user = db.Users.Add(user);
-                db.SaveChanges();
-                return new ServiceResponse<IUser>(new UserResponse(_user), HttpStatusCode.OK, "User added succesfully!");
+                var user = new User
+                {
+                    UserName = userRequest.UserName,
+                    Name = userRequest.Name,
+                    Surname = userRequest.Surname,
+                    City = userRequest.City,
+                };
+
+                var userManager = new UserManager<User, int>(new UserStore<User, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>(db));
+
+                userManager.Create(user, userRequest.Password);
+
+                var userAfterAdd = userManager.FindByName(userRequest.UserName);
+
+                return new ServiceResponse<ICustomUser>(new UserResponse(userAfterAdd), HttpStatusCode.OK, "User added succesfully!");
             }
         }
 
@@ -41,7 +51,7 @@ namespace PD.Services.Services
 
                 var userToRemove = db.Users.Include(x => x.Diaries).Include(x => x.UserDetails).FirstOrDefault(x => x.Id == id);
                 db.Diaries.RemoveRange(userToRemove.Diaries);
-                if(userToRemove.UserDetails != null)
+                if (userToRemove.UserDetails != null)
                 {
                     db.UserDetails.Remove(userToRemove.UserDetails);
                 }
@@ -51,7 +61,7 @@ namespace PD.Services.Services
             return new ServiceResponse(HttpStatusCode.OK, "User deleted!");
         }
 
-        public ServiceResponse<IEnumerable<IUser>> Read()
+        public ServiceResponse<IEnumerable<ICustomUser>> Read()
         {
             List<User> users = new List<User>();
             using (DiaryContext db = new DiaryContext())
@@ -63,25 +73,25 @@ namespace PD.Services.Services
             {
                 userResponses.Add(new UserResponse(item));
             }
-            return new ServiceResponse<IEnumerable<IUser>>(userResponses, HttpStatusCode.OK, "Table downloaded!");
+            return new ServiceResponse<IEnumerable<ICustomUser>>(userResponses, HttpStatusCode.OK, "Table downloaded!");
         }
 
-        public ServiceResponse<IUser> ReadById(int id)
+        public ServiceResponse<ICustomUser> ReadById(int id)
         {
             User user;
             using (DiaryContext db = new DiaryContext())
             {
                 if (!db.Users.Any(x => x.Id == id))
                 {
-                    return new ServiceResponse<IUser>(null, HttpStatusCode.NotFound, "There is not existing user with given id!");
+                    return new ServiceResponse<ICustomUser>(null, HttpStatusCode.NotFound, "There is not existing user with given id!");
                 }
-                user = db.Users.Include(x=>x.Diaries).Include(x=>x.UserDetails).FirstOrDefault(x => x.Id == id); 
+                user = db.Users.Include(x => x.Diaries).Include(x => x.UserDetails).FirstOrDefault(x => x.Id == id);
             }
             UserResponse userResponse = new UserResponse(user);
-            return new ServiceResponse<IUser>(userResponse, HttpStatusCode.OK, "User downloaded!");
+            return new ServiceResponse<ICustomUser>(userResponse, HttpStatusCode.OK, "User downloaded!");
         }
 
-        public ServiceResponse<IUser> Update(IUser updateUserRequest)
+        public ServiceResponse<ICustomUser> Update(ICustomUser updateUserRequest)
         {
             Type myType = updateUserRequest.GetType();
             PropertyInfo property = myType.GetProperty("Id");
@@ -91,7 +101,7 @@ namespace PD.Services.Services
             {
                 if (!db.Users.Any(x => x.Id == id))
                 {
-                    return new ServiceResponse<IUser>(null, HttpStatusCode.NotFound, "There is not existing user with given id!");
+                    return new ServiceResponse<ICustomUser>(null, HttpStatusCode.NotFound, "There is not existing user with given id!");
                 }
                 userToUpdate = db.Users.FirstOrDefault(x => x.Id == id);
                 if (!string.IsNullOrEmpty(updateUserRequest.Name))
@@ -107,7 +117,7 @@ namespace PD.Services.Services
                     userToUpdate.City = updateUserRequest.City;
                 }
                 db.SaveChanges();
-                return new ServiceResponse<IUser>(new UserResponse(userToUpdate), HttpStatusCode.OK, "User was updated successfully");
+                return new ServiceResponse<ICustomUser>(new UserResponse(userToUpdate), HttpStatusCode.OK, "User was updated successfully");
             }
         }
 
@@ -116,7 +126,7 @@ namespace PD.Services.Services
             using (DiaryContext db = new DiaryContext())
             {
                 User userVerification = db.Users.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
-                if(userVerification == null || userVerification.UserDetails != null)
+                if (userVerification == null || userVerification.UserDetails != null)
                 {
                     return new ServiceResponse<IUserDetails>(null, HttpStatusCode.BadRequest, "User does not exist or it already has a details");
                 }
@@ -142,10 +152,12 @@ namespace PD.Services.Services
             using (DiaryContext db = new DiaryContext())
             {
                 UserDetails userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
+
                 if (userDetailsToUpdate == null)
                 {
                     return new ServiceResponse<IUserDetails>(null, HttpStatusCode.NotFound, "There are not existing user details with given id!");
                 }
+
                 userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
                 if (userDetailsRequest.Age > 0)
                 {
@@ -159,15 +171,40 @@ namespace PD.Services.Services
                 {
                     userDetailsToUpdate.Weight = userDetailsRequest.Weight;
                 }
+
                 db.SaveChanges();
                 return new ServiceResponse<IUserDetails>(new UserDetailsResponse(userDetailsToUpdate), HttpStatusCode.OK, "UserDetails added succesfully!");
             }
         }
-        public float[] CalculateBMIandBMR(float weight, int height, int age)
+
+        public User GetUserModelFromRequest(HttpRequestMessage request)
+        {
+            if (request.Properties.TryGetValue("Ticket", out var value))
+            {
+                if (value is AuthenticationTicket mappedTicket)
+                {
+                    if (mappedTicket.Properties.Dictionary.TryGetValue("UserId", out string id))
+                    {
+                        if (int.TryParse(id, out var parsedId ))
+                        {
+                            using (var db = new DiaryContext())
+                            using (var userManager = new UserManager<User, int>(new UserStore<User, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>(db)))
+                            {
+                                var user = userManager.FindById(parsedId);
+                                return user;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        private float[] CalculateBMIandBMR(float weight, int height, int age)
         {
             float[] results = new float[2];
             double heightToSquare = Convert.ToDouble(height);
-            float height2 = Convert.ToSingle(Math.Pow(heightToSquare, 2))/10000;
+            float height2 = Convert.ToSingle(Math.Pow(heightToSquare, 2)) / 10000;
             results[0] = weight / height2;
             results[1] = (float)9.99 * weight + (float)6.25 * height - (float)4.92 * age + 5;
             return results;

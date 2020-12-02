@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace PD.Services.Contracts.Api.Users.Responses
 {
-    public class UserResponse : IUser
+    public class UserResponse : ICustomUser
     {
         public UserResponse()
         {
@@ -41,7 +41,7 @@ namespace PD.Services.Contracts.Api.Users.Responses
         public string City { get; set; }
         public UserDetailsResponse UserDetails { get; set; }
         public ICollection<DiaryResponse> Diaries { get; set; }
-
-        
+        public string UserName { get; set; }
+        public string Password { get; set; }
     }
 }

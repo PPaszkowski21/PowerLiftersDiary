@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using PD.Data.Models;
+using System.Collections.Generic;
 
 namespace PowerlifterDiary.Models
 {
-    public class User
+    public class User : IdentityUser<int, CustomUserLogin, CustomUserRole, CustomUserClaim>
     {
-        public int Id { get; set; }
+        public new int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string City { get; set; }

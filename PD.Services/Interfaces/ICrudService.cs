@@ -14,5 +14,6 @@ namespace PD.Services
         ServiceResponse<T> ReadById(int id);
         ServiceResponse<T> Update(T content);
         ServiceResponse Delete(int id);
+        void GetUserModelFromRequest();
     }
 }

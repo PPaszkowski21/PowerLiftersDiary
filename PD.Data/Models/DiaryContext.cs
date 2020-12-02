@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using PD.Data.Models;
 using System.Data.Entity;
-using System.Linq;
-using System.Web;
 
 namespace PowerlifterDiary.Models
 {
-    public class DiaryContext : DbContext
+    public class DiaryContext : IdentityDbContext<User, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>
     {
-        public DiaryContext():base("name=RemoteConnectionString")
+        public DiaryContext() : base("name=ConnectionString")
         {
             Configuration.LazyLoadingEnabled = true;
             Configuration.ProxyCreationEnabled = true;
@@ -21,7 +19,6 @@ namespace PowerlifterDiary.Models
         public DbSet<Day> Days { get; set; }
         public DbSet<Diary> Diaries { get; set; }
         public DbSet<Dream> Dreams { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<UserDetails> UserDetails { get; set; }
     }
 }

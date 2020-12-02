@@ -14,15 +14,27 @@ using System.Web.Http;
 
 namespace PD.Api.Controllers
 {
+    
     [RoutePrefix("user")]
     public class UserController : BaseApiController
     {
-        private readonly ICrudService<IUser> _userService;
+        private readonly ICrudService<ICustomUser> _userService;
         public UserController()
         {
             this._userService = new UserService();
         }
 
+
+        
+        [HttpPost]
+        [Route("authorization/test")]
+        public IHttpActionResult Test(AddUserRequest user)
+        {
+            _userService
+            return Ok();
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         [Route("create")]
         public IHttpActionResult Create(AddUserRequest user)
