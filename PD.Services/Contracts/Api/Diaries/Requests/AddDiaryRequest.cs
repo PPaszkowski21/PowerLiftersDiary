@@ -11,7 +11,7 @@ namespace PD.Services.Contracts.Api.Diaries.Requests
         [Required]
         public DateTime StartDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         public string Conclusions { get; set; }
 
@@ -24,12 +24,12 @@ namespace PD.Services.Contracts.Api.Diaries.Requests
         [Required]
         public int DeadliftStart { get; set; }
 
-        public int BenchPressEnd { get; set; }
+        public int? BenchPressEnd { get; set; }
 
-        public int SquatEnd { get; set; }
+        public int? SquatEnd { get; set; }
 
-        public int DeadliftEnd { get; set; }
+        public int? DeadliftEnd { get; set; }
 
-        public float Progress { get; set; }
+        public float? Progress { get; set; }
     }
 }

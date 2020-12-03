@@ -12,10 +12,11 @@ namespace PD.Services.Contracts.Api.TrainingUnits.Responses
         public TrainingUnitResponse(TrainingUnit trainingUnit)
         {
             Id = trainingUnit.Id;
-            if (trainingUnit != null)
+            if (trainingUnit.ExerciseTrainings != null)
             {
                 ExerciseTrainings = new List<ExerciseTrainingResponse>();
                 TrainingService trainingService = new TrainingService();
+                
                 foreach (var exerciseTraining in trainingUnit.ExerciseTrainings)
                 {
                     ExerciseTrainings.Add(trainingService.GetExerciseTraining(exerciseTraining.Id));

@@ -13,7 +13,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Reflection;
 
 namespace PD.Services.Services
 {
@@ -51,16 +50,57 @@ namespace PD.Services.Services
                 }
 
                 var userToRemove = db.Users.Include(x => x.Diaries).Include(x => x.UserDetails).FirstOrDefault(x => x.Id == id);
-                db.Diaries.RemoveRange(userToRemove.Diaries);
+                DiaryService diaryService = new DiaryService();
+                foreach (var diary in userToRemove.Diaries)
+                {
+                    diaryService.Delete(diary.Id);
+                }
                 if (userToRemove.UserDetails != null)
                 {
                     db.UserDetails.Remove(userToRemove.UserDetails);
                 }
-                db.Users.Remove(userToRemove);
+                var userManager = new UserManager<User, int>(new UserStore<User, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>(db));
+                userManager.Delete(userToRemove);
                 db.SaveChanges();
             }
             return new ServiceResponse(HttpStatusCode.OK, "User deleted!");
         }
+
+        //public async ServiceResponse DeleteUser(int id)
+        //{
+        //    try
+        //    {
+        //        var user = await _userManager.FindByIdAsync(id);
+        //        if (user == null)
+        //            return new ServiceResponse
+        //            {
+        //                ResponseMessage = "Unable to get user.",
+        //                StatusCode = HttpStatusCode.NotFound
+        //            };
+
+        //        var result = await _userManager.DeleteAsync(user);
+        //        if (!result.Succeeded)
+        //            return new ServiceResponse
+        //            {
+        //                ResponseMessage = "Unable to delete user.",
+        //                StatusCode = HttpStatusCode.InternalServerError
+        //            };
+
+        //        return new ServiceResponse
+        //        {
+        //            StatusCode = HttpStatusCode.OK
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //TODO log errors
+        //        return new ServiceResponse
+        //        {
+        //            StatusCode = HttpStatusCode.InternalServerError,
+        //            ResponseMessage = "Unhandled error."
+        //        };
+        //    }
+        //}
 
         public ServiceResponse<IEnumerable<UserResponse>> Read()
         {

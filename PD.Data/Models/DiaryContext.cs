@@ -6,7 +6,7 @@ namespace PowerlifterDiary.Models
 {
     public class DiaryContext : IdentityDbContext<User, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>
     {
-        public DiaryContext() : base("name=ConnectionString")
+        public DiaryContext() : base("name=RemoteConnectionString")
         {
             Configuration.LazyLoadingEnabled = true;
             Configuration.ProxyCreationEnabled = true;

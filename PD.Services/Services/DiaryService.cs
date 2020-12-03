@@ -58,13 +58,11 @@ namespace PD.Services.Services
                 }
 
                 var diaryToRemove = db.Diaries.Include(x => x.Days).Include(x => x.User).FirstOrDefault(x => x.Id == id);
-                foreach (var item in db.Days)
+                DayService dayService = new DayService();
+                foreach (var day in diaryToRemove.Days)
                 {
-                    Dream dream = db.Dreams.FirstOrDefault(x => x.Id == item.Id);
-                    if (dream != null)
-                    db.Dreams.Remove(dream);
+                    dayService.Delete(day.Id);
                 }
-                db.Days.RemoveRange(diaryToRemove.Days);
                 db.Diaries.Remove(diaryToRemove);
                 db.SaveChanges();
             }

@@ -6,9 +6,10 @@ namespace PD.Services.Contracts.Api.ExerciseTrainings.Requests
     {
         [Required]
         public int TrainingUnitId { get; set; }
+
         [Required]
         public int ExerciseId{ get; set; }
-        //[Required]
-        //public int ExerciseDetailsId { get; set; }
+        [Required]
+        public int ExerciseDetailsId { get; set; }
     }
 }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using PowerlifterDiary.Models;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PD.Services.Contracts.Api.Exercises.Requests
 {
@@ -13,7 +9,7 @@ namespace PD.Services.Contracts.Api.Exercises.Requests
         public string Name { get; set; }
         [Required]
         public string Description { get; set; }
-
-        //public ExerciseEquipment ExerciseEquipment { get; set; }
+        [Required]
+        public int ExerciseEquipmentId { get; set; }
     }
 }

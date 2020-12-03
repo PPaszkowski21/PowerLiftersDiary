@@ -12,7 +12,5 @@ namespace PD.Services.Contracts.Api.UserDetails.Requests
         public float Weight { get; set; }
         [Required]
         public int Age { get; set; }
-        public float BMR { get; set; }
-        public float BMI { get; set; }
     }
 }

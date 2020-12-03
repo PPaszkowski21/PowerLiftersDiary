@@ -45,10 +45,17 @@ namespace PD.Services.Services
                 {
                     return new ServiceResponse<ExerciseTrainingResponse>(null, HttpStatusCode.NotFound, "Unable to find the exercise!");
                 }
+
+                var exerciseDetails = db.ExercisesDetails.FirstOrDefault(x => x.Id == addExerciseTrainingRequest.ExerciseDetailsId);
+                if(exerciseDetails == null)
+                {
+                    return new ServiceResponse<ExerciseTrainingResponse>(null, HttpStatusCode.NotFound, "Unable to find the exercise details!");
+                }
                 var exerciseTraining = new ExerciseTraining
                 {
                     TrainingUnit = trainingUnit,
-                    Exercise = exercise
+                    Exercise = exercise,
+                    ExerciseDetails = exerciseDetails
                 };
                 ExerciseTraining _ExerciseTraining = db.ExerciseTrainings.Add(exerciseTraining);
                 db.SaveChanges();
@@ -76,6 +83,42 @@ namespace PD.Services.Services
                     return null;
                 return new ExerciseTrainingResponse(exerciseTraining);
             }
+        }
+
+        public ServiceResponse DeleteExerciseTraining(int id)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                if (!db.ExerciseTrainings.Any(x => x.Id == id))
+                {
+                    return new ServiceResponse(HttpStatusCode.NotFound, "There is not existing exercise training with given id!");
+                }
+
+                var exerciseToRemove = db.ExerciseTrainings.Include("ExerciseEquipment").Include("Exercise").Include("ExerciseDetails").FirstOrDefault(x => x.Id == id);
+                db.ExerciseTrainings.Remove(exerciseToRemove);
+                db.SaveChanges();
+            }
+            return new ServiceResponse(HttpStatusCode.OK, "Exercise Training deleted!");
+        }
+
+        public ServiceResponse DeleteTrainingUnit(int id)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                if (!db.TrainingUnits.Any(x => x.Id == id))
+                {
+                    return new ServiceResponse(HttpStatusCode.NotFound, "There is not existing training unit with given id!");
+                }
+
+                var trainingToRemove = db.TrainingUnits.Include("Day").Include("ExerciseTrainings").FirstOrDefault(x => x.Id == id);
+                foreach (var exerciseTraining in trainingToRemove.ExerciseTrainings)
+                {
+                    DeleteExerciseTraining(exerciseTraining.Id);
+                }
+                db.TrainingUnits.Remove(trainingToRemove);
+                db.SaveChanges();
+            }
+            return new ServiceResponse(HttpStatusCode.OK, "Training unit deleted!");
         }
 
         //public ServiceResponse Delete(int id)

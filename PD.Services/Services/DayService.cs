@@ -55,8 +55,15 @@ namespace PD.Services.Services
                 }
 
                 var dayToRemove = db.Days.Include("Diary").Include("Dream").Include("TrainingUnits").FirstOrDefault(x => x.Id == id);
-                //db.TrainingUnits.RemoveRange(dayToRemove.TrainingUnits);
-                db.Dreams.Remove(dayToRemove.Dream);
+                TrainingService trainingService = new TrainingService();
+                foreach (var trainingUnit in dayToRemove.TrainingUnits)
+                {
+                    trainingService.DeleteTrainingUnit(trainingUnit.Id);
+                }
+                if(dayToRemove.Dream != null)
+                {
+                    db.Dreams.Remove(dayToRemove.Dream);
+                }
                 db.Days.Remove(dayToRemove);
                 db.SaveChanges();
             }
