@@ -15,12 +15,9 @@ namespace PD.Services.Services
     {
         public ServiceResponse<DayResponse> Add(AddDayRequest dayRequest)
         {
-            Type myType = dayRequest.GetType();
-            PropertyInfo property = myType.GetProperty("DiaryId");
-            int id = (int)property.GetValue(dayRequest);
             using (DiaryContext db = new DiaryContext())
             {
-                var diary = db.Diaries.FirstOrDefault(x => x.Id == id);
+                var diary = db.Diaries.FirstOrDefault(x => x.Id == dayRequest.DiaryId);
                 if (diary == null)
                 {
                     return new ServiceResponse<DayResponse>(null, HttpStatusCode.NotFound, "Unable to find the diary!");
@@ -92,17 +89,14 @@ namespace PD.Services.Services
         }
         public ServiceResponse<DayResponse> Update(UpdateDayRequest updateDayRequest)
         {
-            Type myType = updateDayRequest.GetType();
-            PropertyInfo property = myType.GetProperty("Id");
-            int id = (int)property.GetValue(updateDayRequest);
             Day dayToUpdate;
             using (DiaryContext db = new DiaryContext())
             {
-                if (!db.Days.Any(x => x.Id == id))
+                if (!db.Days.Any(x => x.Id == updateDayRequest.Id))
                 {
                     return new ServiceResponse<DayResponse>(null, HttpStatusCode.NotFound, "There is not existing day with given id!");
                 }
-                dayToUpdate = db.Days.FirstOrDefault(x => x.Id == id);
+                dayToUpdate = db.Days.FirstOrDefault(x => x.Id == updateDayRequest.Id);
                 if (updateDayRequest.Date.Year > 2019)
                 {
                     dayToUpdate.Date = updateDayRequest.Date;
@@ -130,7 +124,7 @@ namespace PD.Services.Services
                 };
                 var _dream = db.Dreams.Add(dream);
                 db.SaveChanges();
-                return new ServiceResponse<DreamResponse>(new DreamResponse(_dream,typeof(DreamResponse)), HttpStatusCode.OK, "Dream added succesfully!");
+                return new ServiceResponse<DreamResponse>(new DreamResponse(_dream), HttpStatusCode.OK, "Dream added succesfully!");
             }
         }
 
@@ -153,7 +147,7 @@ namespace PD.Services.Services
                     dreamToUpdate.Quality = updateDreamRequest.Quality;
                 }
                 db.SaveChanges();
-                return new ServiceResponse<DreamResponse>(new DreamResponse(dreamToUpdate,typeof(DreamResponse)), HttpStatusCode.OK, "UserDetails added succesfully!");
+                return new ServiceResponse<DreamResponse>(new DreamResponse(dreamToUpdate), HttpStatusCode.OK, "UserDetails added succesfully!");
             }
         }
     }

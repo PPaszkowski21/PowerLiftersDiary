@@ -1,5 +1,4 @@
-﻿using PD.Services.Contracts.Api.Users.Responses;
-using PowerlifterDiary.Models;
+﻿using PowerlifterDiary.Models;
 using UsersDetails = PowerlifterDiary.Models.UserDetails;
 
 namespace PD.Services.Contracts.Api.UserDetails.Responses
@@ -12,7 +11,6 @@ namespace PD.Services.Contracts.Api.UserDetails.Responses
         public int Age { get; set; }
         public float BMR { get; set; }
         public float BMI { get; set; }
-        public UserResponse User { get; set; }
         public UserDetailsResponse()
         {
 

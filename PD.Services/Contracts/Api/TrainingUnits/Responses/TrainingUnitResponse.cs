@@ -1,20 +1,25 @@
-﻿using PD.Services.Contracts.Api.Days.Responses;
+﻿using PD.Services.Contracts.Api.ExerciseTrainings.Responses;
+using PD.Services.Services;
 using PowerlifterDiary.Models;
-using System;
+using System.Collections.Generic;
 
 namespace PD.Services.Contracts.Api.TrainingUnits.Responses
 {
     public class TrainingUnitResponse
     {
         public int Id { get; set; }
-        public DayResponse Day { get; set; }
-        //public virtual ICollection<ExerciseTraining> ExerciseTrainings { get; set; }
-        public TrainingUnitResponse(TrainingUnit trainingUnit, Type type)
+        public ICollection<ExerciseTrainingResponse> ExerciseTrainings { get; set; }
+        public TrainingUnitResponse(TrainingUnit trainingUnit)
         {
-            this.Id = trainingUnit.Id;
-            if (type == typeof(TrainingUnitResponse))
+            Id = trainingUnit.Id;
+            if (trainingUnit != null)
             {
-                this.Day = new DayResponse(trainingUnit.Day, typeof(TrainingUnitResponse));
+                ExerciseTrainings = new List<ExerciseTrainingResponse>();
+                TrainingService trainingService = new TrainingService();
+                foreach (var exerciseTraining in trainingUnit.ExerciseTrainings)
+                {
+                    ExerciseTrainings.Add(trainingService.GetExerciseTraining(exerciseTraining.Id));
+                }
             }
         }
 

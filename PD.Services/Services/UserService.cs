@@ -94,17 +94,14 @@ namespace PD.Services.Services
 
         public ServiceResponse<UserResponse> Update(UpdateUserRequest updateUserRequest)
         {
-            Type myType = updateUserRequest.GetType();
-            PropertyInfo property = myType.GetProperty("Id");
-            int id = (int)property.GetValue(updateUserRequest);
             User userToUpdate;
             using (DiaryContext db = new DiaryContext())
             {
-                if (!db.Users.Any(x => x.Id == id))
+                if (!db.Users.Any(x => x.Id == updateUserRequest.Id))
                 {
                     return new ServiceResponse<UserResponse>(null, HttpStatusCode.NotFound, "There is not existing user with given id!");
                 }
-                userToUpdate = db.Users.FirstOrDefault(x => x.Id == id);
+                userToUpdate = db.Users.FirstOrDefault(x => x.Id == updateUserRequest.Id);
                 if (!string.IsNullOrEmpty(updateUserRequest.Name))
                 {
                     userToUpdate.Name = updateUserRequest.Name;

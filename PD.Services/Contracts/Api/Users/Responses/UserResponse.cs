@@ -18,10 +18,14 @@ namespace PD.Services.Contracts.Api.Users.Responses
             Name = user.Name;
             Surname = user.Surname;
             City = user.City;
-            UserDetails = new UserDetailsResponse(user);
-            Diaries = new List<DiaryResponse>();
+            if(user.UserDetails!=null)
+            {
+                UserDetails = new UserDetailsResponse(user.UserDetails);
+            }
+            
             if(user.Diaries != null)
             {
+                Diaries = new List<DiaryResponse>();
                 DiaryService diaryService = new DiaryService();
                 foreach (var diary in user.Diaries)
                 {
@@ -35,7 +39,7 @@ namespace PD.Services.Contracts.Api.Users.Responses
         public string City { get; set; }
         public UserDetailsResponse UserDetails { get; set; }
         public ICollection<DiaryResponse> Diaries { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        //public string UserName { get; set; }
+        //public string Password { get; set; }
     }
 }

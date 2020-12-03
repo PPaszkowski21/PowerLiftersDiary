@@ -1,4 +1,5 @@
-﻿using PD.Services.Contracts.Api.TrainingUnits.Requests;
+﻿using PD.Services.Contracts.Api.ExerciseTrainings.Requests;
+using PD.Services.Contracts.Api.TrainingUnits.Requests;
 using PD.Services.Services;
 using System.Net;
 using System.Web.Http;
@@ -15,13 +16,23 @@ namespace PD.Api.Controllers
             this._trainingService = new TrainingService();
         }
         [HttpPost]
-        [Route("create")]
+        [Route("create/training")]
         public IHttpActionResult Create(AddTrainingUnitRequest trainingUnitRequest)
         {
             if (trainingUnitRequest == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
             var result = _trainingService.Add(trainingUnitRequest);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
+
+        [HttpPost]
+        [Route("create/exercise")]
+        public IHttpActionResult Create(AddExerciseTrainingRequest addExerciseTrainingRequest)
+        {
+            if (addExerciseTrainingRequest == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _trainingService.Add(addExerciseTrainingRequest);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
 
         //[HttpGet]
         //[Route("read")]

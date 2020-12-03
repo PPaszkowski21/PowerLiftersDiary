@@ -8,8 +8,8 @@ namespace PowerlifterDiary.Models
     public class ExerciseTraining
     {
         public int Id { get; set; }
-        public Exercise Exercise { get; set; }
-        public ExerciseDetails ExerciseDetails { get; set; }
-        public TrainingUnit TrainingUnit { get; set; }
+        public virtual Exercise Exercise { get; set; }
+        public virtual ExerciseDetails ExerciseDetails { get; set; }
+        public virtual TrainingUnit TrainingUnit { get; set; }
     }
 }

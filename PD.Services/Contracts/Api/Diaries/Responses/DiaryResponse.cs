@@ -9,7 +9,6 @@ namespace PD.Services.Contracts.Api.Diaries.Responses
     public class DiaryResponse
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Conclusions { get; set; }
@@ -22,13 +21,9 @@ namespace PD.Services.Contracts.Api.Diaries.Responses
         public float Progress { get; set; }
         public ICollection<DayResponse> Days { get; set; }
 
-        public DiaryResponse(Diary diary, Type type)
+        public DiaryResponse(Diary diary)
         {
             Id = diary.Id;
-            if (type == typeof(DiaryResponse))
-            {
-                UserId = diary.User.Id;
-            }
             StartDate = diary.StartDate;
             EndDate = diary.EndDate;
             Conclusions = diary.Conclusions;
@@ -39,18 +34,17 @@ namespace PD.Services.Contracts.Api.Diaries.Responses
             SquatEnd = diary.SquatEnd;
             DeadliftEnd = diary.DeadliftEnd;
             Progress = diary.Progress;
-            if(type == typeof(DiaryResponse))
+            if (diary.Days != null)
             {
                 Days = new List<DayResponse>();
-                if (diary.Days != null)
+                DayService dayService = new DayService();
+                foreach (var day in diary.Days)
                 {
-                    DayService dayService = new DayService();
-                    foreach (var day in diary.Days)
-                    {
-                        Days.Add(dayService.GetDay(day.Id));
-                    }
+                    Days.Add(dayService.GetDay(day.Id));
                 }
             }
+            
         }
+
     }
 }

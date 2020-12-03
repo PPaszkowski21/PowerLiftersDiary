@@ -1,5 +1,6 @@
-﻿using PD.Services.Contracts.Api.Diaries.Responses;
-using PD.Services.Contracts.Api.Dreams.Responses;
+﻿using PD.Services.Contracts.Api.Dreams.Responses;
+using PD.Services.Contracts.Api.TrainingUnits.Responses;
+using PD.Services.Services;
 using PowerlifterDiary.Models;
 using System;
 using System.Collections.Generic;
@@ -11,18 +12,25 @@ namespace PD.Services.Contracts.Api.Days.Responses
         public DayResponse(Day day, Type type)
         {
             Id = day.Id;
-            if (type == typeof(DayResponse))
+            if(day.Dream != null)
             {
-                Diary = new DiaryResponse(day.Diary, typeof(DayResponse));
-                Dream = new DreamResponse(day, typeof(DayResponse));   
+                Dream = new DreamResponse(day);
+            }
+            if (day.TrainingUnits != null)
+            {
+                TrainingUnits = new List<TrainingUnitResponse>();
+                TrainingService trainingService = new TrainingService();
+                foreach (var trainingUnit in day.TrainingUnits)
+                {
+                    TrainingUnits.Add(trainingService.GetTrainingUnit(trainingUnit.Id));
+                }
             }
             Date = day.Date;
         }
         public int Id { get; set; }
-        public DiaryResponse Diary { get; set; }
         public DateTime Date { get; set; }
-        public virtual DreamResponse Dream { get; set; }
-        public ICollection<TrainingUnit> TrainingUnits { get; set; }
+        public DreamResponse Dream { get; set; }
+        public ICollection<TrainingUnitResponse> TrainingUnits { get; set; }
 
     }
 }

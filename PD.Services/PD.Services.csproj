@@ -94,6 +94,10 @@
     <Compile Include="Contracts\Api\Dreams\Requests\AddDreamRequest.cs" />
     <Compile Include="Contracts\Api\Dreams\Requests\UpdateDreamRequest.cs" />
     <Compile Include="Contracts\Api\Dreams\Responses\DreamResponse.cs" />
+    <Compile Include="Contracts\Api\Exercises\Requests\AddExerciseRequest.cs" />
+    <Compile Include="Contracts\Api\Exercises\Responses\ExerciseResponse.cs" />
+    <Compile Include="Contracts\Api\ExerciseTrainings\Requests\AddExerciseTrainingRequest.cs" />
+    <Compile Include="Contracts\Api\ExerciseTrainings\Responses\ExerciseTrainingResponse.cs" />
     <Compile Include="Contracts\Api\TrainingUnits\Requests\AddTrainingUnitRequest.cs" />
     <Compile Include="Contracts\Api\TrainingUnits\Responses\TrainingUnitResponse.cs" />
     <Compile Include="Contracts\Api\UserDetails\Requests\AddUserDetailsRequest.cs" />
@@ -106,6 +110,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DayService.cs" />
     <Compile Include="Services\DiaryService.cs" />
+    <Compile Include="Services\ExerciseService.cs" />
     <Compile Include="Services\TrainingService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>

@@ -1,24 +1,20 @@
-﻿using PD.Services.Contracts.Api.TrainingUnits.Requests;
+﻿using PD.Services.Contracts.Api.ExerciseTrainings.Requests;
+using PD.Services.Contracts.Api.ExerciseTrainings.Responses;
+using PD.Services.Contracts.Api.TrainingUnits.Requests;
 using PD.Services.Contracts.Api.TrainingUnits.Responses;
 using PowerlifterDiary.Models;
-using System;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 
 namespace PD.Services.Services
 {
     public class TrainingService
     {
-
         public ServiceResponse<TrainingUnitResponse> Add(AddTrainingUnitRequest trainingUnitRequest)
         {
-            Type myType = trainingUnitRequest.GetType();
-            PropertyInfo property = myType.GetProperty("DayId");
-            int id = (int)property.GetValue(trainingUnitRequest);
             using (DiaryContext db = new DiaryContext())
             {
-                var day = db.Days.FirstOrDefault(x => x.Id == id);
+                var day = db.Days.FirstOrDefault(x => x.Id == trainingUnitRequest.DayId);
                 if (day == null)
                 {
                     return new ServiceResponse<TrainingUnitResponse>(null, HttpStatusCode.NotFound, "Unable to find the day!");
@@ -30,7 +26,33 @@ namespace PD.Services.Services
                 };
                 TrainingUnit _trainingUnit = db.TrainingUnits.Add(trainingUnit);
                 db.SaveChanges();
-                return new ServiceResponse<TrainingUnitResponse>(new TrainingUnitResponse(_trainingUnit, typeof(TrainingUnitResponse)), HttpStatusCode.OK, "Day added succesfully!");
+                return new ServiceResponse<TrainingUnitResponse>(new TrainingUnitResponse(_trainingUnit), HttpStatusCode.OK, "Training unit added succesfully!");
+            }
+        }
+
+        public ServiceResponse<ExerciseTrainingResponse> Add(AddExerciseTrainingRequest addExerciseTrainingRequest)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                var trainingUnit = db.TrainingUnits.FirstOrDefault(x => x.Id == addExerciseTrainingRequest.TrainingUnitId);
+                if (trainingUnit == null)
+                {
+                    return new ServiceResponse<ExerciseTrainingResponse>(null, HttpStatusCode.NotFound, "Unable to find the training unit!");
+                }
+
+                var exercise = db.Exercises.FirstOrDefault(x => x.Id == addExerciseTrainingRequest.ExerciseId);
+                if(exercise == null)
+                {
+                    return new ServiceResponse<ExerciseTrainingResponse>(null, HttpStatusCode.NotFound, "Unable to find the exercise!");
+                }
+                var exerciseTraining = new ExerciseTraining
+                {
+                    TrainingUnit = trainingUnit,
+                    Exercise = exercise
+                };
+                ExerciseTraining _ExerciseTraining = db.ExerciseTrainings.Add(exerciseTraining);
+                db.SaveChanges();
+                return new ServiceResponse<ExerciseTrainingResponse>(new ExerciseTrainingResponse(_ExerciseTraining), HttpStatusCode.OK, "ExerciseTraining added succesfully!");
             }
         }
 
@@ -41,7 +63,18 @@ namespace PD.Services.Services
                 TrainingUnit trainingUnit = db.TrainingUnits.Include("Day").Include("ExerciseTrainings").FirstOrDefault(x => x.Id == id);
                 if (trainingUnit == null)
                     return null;
-                return new TrainingUnitResponse(trainingUnit, typeof(TrainingUnitResponse));
+                return new TrainingUnitResponse(trainingUnit);
+            }
+        }
+
+        public ExerciseTrainingResponse GetExerciseTraining(int id)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                ExerciseTraining exerciseTraining = db.ExerciseTrainings.Include("Exercise").Include("ExerciseDetails").Include("TrainingUnit").FirstOrDefault(x => x.Id == id);
+                if (exerciseTraining == null)
+                    return null;
+                return new ExerciseTrainingResponse(exerciseTraining);
             }
         }
 
