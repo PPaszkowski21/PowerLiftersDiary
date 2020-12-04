@@ -14,7 +14,7 @@ namespace PowerlifterDiary.Models
         public int ConcetricPause { get; set; }
         public int Series { get; set; }
         public int Repeats { get; set; }
-        public ICollection<ExerciseTraining> ExerciseTrainings { get; set; }
+        public virtual ICollection<ExerciseTraining> ExerciseTrainings { get; set; }
 
     }
 }

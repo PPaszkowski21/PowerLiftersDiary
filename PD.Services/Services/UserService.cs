@@ -59,6 +59,11 @@ namespace PD.Services.Services
                 {
                     db.UserDetails.Remove(userToRemove.UserDetails);
                 }
+                db.SaveChanges();
+            }
+            using (DiaryContext db = new DiaryContext())
+            {
+                var userToRemove = db.Users.Include(x => x.Diaries).Include(x => x.UserDetails).FirstOrDefault(x => x.Id == id);
                 var userManager = new UserManager<User, int>(new UserStore<User, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>(db));
                 userManager.Delete(userToRemove);
                 db.SaveChanges();
@@ -102,20 +107,20 @@ namespace PD.Services.Services
         //    }
         //}
 
-        public ServiceResponse<IEnumerable<UserResponse>> Read()
-        {
-            List<User> users = new List<User>();
-            using (DiaryContext db = new DiaryContext())
-            {
-                users = db.Users.Include(x => x.Diaries).Include(x => x.UserDetails).ToList();
-            }
-            List<UserResponse> userResponses = new List<UserResponse>();
-            foreach (var item in users)
-            {
-                userResponses.Add(new UserResponse(item));
-            }
-            return new ServiceResponse<IEnumerable<UserResponse>>(userResponses, HttpStatusCode.OK, "Table downloaded!");
-        }
+        //public ServiceResponse<IEnumerable<UserResponse>> Read()
+        //{
+        //    List<User> users = new List<User>();
+        //    using (DiaryContext db = new DiaryContext())
+        //    {
+        //        users = db.Users.Include(x => x.Diaries).Include(x => x.UserDetails).ToList();
+        //    }
+        //    List<UserResponse> userResponses = new List<UserResponse>();
+        //    foreach (var item in users)
+        //    {
+        //        userResponses.Add(new UserResponse(item));
+        //    }
+        //    return new ServiceResponse<IEnumerable<UserResponse>>(userResponses, HttpStatusCode.OK, "Table downloaded!");
+        //}
 
         public ServiceResponse<UserResponse> ReadById(int id)
         {
@@ -132,32 +137,32 @@ namespace PD.Services.Services
             return new ServiceResponse<UserResponse>(userResponse, HttpStatusCode.OK, "User downloaded!");
         }
 
-        public ServiceResponse<UserResponse> Update(UpdateUserRequest updateUserRequest)
-        {
-            User userToUpdate;
-            using (DiaryContext db = new DiaryContext())
-            {
-                if (!db.Users.Any(x => x.Id == updateUserRequest.Id))
-                {
-                    return new ServiceResponse<UserResponse>(null, HttpStatusCode.NotFound, "There is not existing user with given id!");
-                }
-                userToUpdate = db.Users.FirstOrDefault(x => x.Id == updateUserRequest.Id);
-                if (!string.IsNullOrEmpty(updateUserRequest.Name))
-                {
-                    userToUpdate.Name = updateUserRequest.Name;
-                }
-                if (!string.IsNullOrEmpty(updateUserRequest.Surname))
-                {
-                    userToUpdate.Surname = updateUserRequest.Surname;
-                }
-                if (!string.IsNullOrEmpty(updateUserRequest.City))
-                {
-                    userToUpdate.City = updateUserRequest.City;
-                }
-                db.SaveChanges();
-                return new ServiceResponse<UserResponse>(new UserResponse(userToUpdate), HttpStatusCode.OK, "User was updated successfully");
-            }
-        }
+        //public ServiceResponse<UserResponse> Update(UpdateUserRequest updateUserRequest)
+        //{
+        //    User userToUpdate;
+        //    using (DiaryContext db = new DiaryContext())
+        //    {
+        //        if (!db.Users.Any(x => x.Id == updateUserRequest.Id))
+        //        {
+        //            return new ServiceResponse<UserResponse>(null, HttpStatusCode.NotFound, "There is not existing user with given id!");
+        //        }
+        //        userToUpdate = db.Users.FirstOrDefault(x => x.Id == updateUserRequest.Id);
+        //        if (!string.IsNullOrEmpty(updateUserRequest.Name))
+        //        {
+        //            userToUpdate.Name = updateUserRequest.Name;
+        //        }
+        //        if (!string.IsNullOrEmpty(updateUserRequest.Surname))
+        //        {
+        //            userToUpdate.Surname = updateUserRequest.Surname;
+        //        }
+        //        if (!string.IsNullOrEmpty(updateUserRequest.City))
+        //        {
+        //            userToUpdate.City = updateUserRequest.City;
+        //        }
+        //        db.SaveChanges();
+        //        return new ServiceResponse<UserResponse>(new UserResponse(userToUpdate), HttpStatusCode.OK, "User was updated successfully");
+        //    }
+        //}
 
         public ServiceResponse<UserDetailsResponse> AddDetails(AddUserDetailsRequest userDetailsRequest)
         {
@@ -185,37 +190,37 @@ namespace PD.Services.Services
             }
         }
 
-        public ServiceResponse<UserDetailsResponse> UpdateDetails(UpdateUserDetailsRequest userDetailsRequest)
-        {
-            using (DiaryContext db = new DiaryContext())
-            {
-                UserDetails userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
+        //public ServiceResponse<UserDetailsResponse> UpdateDetails(UpdateUserDetailsRequest userDetailsRequest)
+        //{
+        //    using (DiaryContext db = new DiaryContext())
+        //    {
+        //        UserDetails userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
 
-                if (userDetailsToUpdate == null)
-                {
-                    return new ServiceResponse<UserDetailsResponse>(null, HttpStatusCode.NotFound, "There are not existing user details with given id!");
-                }
+        //        if (userDetailsToUpdate == null)
+        //        {
+        //            return new ServiceResponse<UserDetailsResponse>(null, HttpStatusCode.NotFound, "There are not existing user details with given id!");
+        //        }
 
-                userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
-                if (userDetailsRequest.Age > 0)
-                {
-                    userDetailsToUpdate.Age = userDetailsRequest.Age;
-                }
-                if (userDetailsRequest.Height > 0)
-                {
-                    userDetailsToUpdate.Height = userDetailsRequest.Height;
-                }
-                if (userDetailsRequest.Weight > 0)
-                {
-                    userDetailsToUpdate.Weight = userDetailsRequest.Weight;
-                }
+        //        userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
+        //        if (userDetailsRequest.Age > 0)
+        //        {
+        //            userDetailsToUpdate.Age = userDetailsRequest.Age;
+        //        }
+        //        if (userDetailsRequest.Height > 0)
+        //        {
+        //            userDetailsToUpdate.Height = userDetailsRequest.Height;
+        //        }
+        //        if (userDetailsRequest.Weight > 0)
+        //        {
+        //            userDetailsToUpdate.Weight = userDetailsRequest.Weight;
+        //        }
 
-                db.SaveChanges();
-                return new ServiceResponse<UserDetailsResponse>(new UserDetailsResponse(userDetailsToUpdate), HttpStatusCode.OK, "UserDetails added succesfully!");
-            }
-        }
+        //        db.SaveChanges();
+        //        return new ServiceResponse<UserDetailsResponse>(new UserDetailsResponse(userDetailsToUpdate), HttpStatusCode.OK, "UserDetails added succesfully!");
+        //    }
+        //}
 
-        public User GetUserModelFromRequest(HttpRequestMessage request)
+        public ServiceResponse<UserResponse> GetUserModelFromRequest(HttpRequestMessage request)
         {
             if (request.Properties.TryGetValue("Ticket", out var value))
             {
@@ -229,7 +234,7 @@ namespace PD.Services.Services
                             using (var userManager = new UserManager<User, int>(new UserStore<User, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>(db)))
                             {
                                 var user = userManager.FindById(parsedId);
-                                return user;
+                                return new ServiceResponse<UserResponse>(new UserResponse(user), HttpStatusCode.OK, "User returned successfully");
                             }
                         }
                     }

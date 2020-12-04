@@ -11,7 +11,7 @@ namespace PowerlifterDiary.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public ExerciseEquipment ExerciseEquipment { get; set; }
-        public ICollection<ExerciseTraining> ExerciseTrainings { get; set; }
+        public virtual ExerciseEquipment ExerciseEquipment { get; set; }
+        public virtual ICollection<ExerciseTraining> ExerciseTrainings { get; set; }
     }
 }

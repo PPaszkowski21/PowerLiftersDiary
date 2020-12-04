@@ -1,5 +1,6 @@
 ﻿using PD.Services.Contracts.Api.ExercisesDetails.Response;
 using PD.Services.Contracts.Api.ExercisesEquipments.Responses;
+using PD.Services.Services;
 using PowerlifterDiary.Models;
 
 namespace PD.Services.Contracts.Api.Exercises.Responses
@@ -13,7 +14,8 @@ namespace PD.Services.Contracts.Api.Exercises.Responses
             Description = exercise.Description;
             if(exercise.ExerciseEquipment!=null)
             {
-                ExerciseEquipment = new ExerciseEquipmentResponse(exercise.ExerciseEquipment);
+                ExerciseService exerciseService = new ExerciseService();
+                ExerciseEquipment = exerciseService.GetExerciseEquipment(exercise.ExerciseEquipment.Id);
             }
         }
         public int Id { get; set; }

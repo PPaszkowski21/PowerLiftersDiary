@@ -5,6 +5,7 @@ using PD.Services.Contracts.Api.ExercisesDetails.Response;
 using PD.Services.Contracts.Api.ExercisesEquipments.Requests;
 using PD.Services.Contracts.Api.ExercisesEquipments.Responses;
 using PowerlifterDiary.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
@@ -64,16 +65,55 @@ namespace PD.Services.Services
             }
         }
 
-        //public ExerciseEquipmentResponse GetExerciseDetails(int id)
-        //{
-        //    using (DiaryContext db = new DiaryContext())
-        //    {
-        //        ExerciseDetails exercise = db.ExercisesDetails.Include("ExerciseTrainings").FirstOrDefault(x => x.Id == id);
-        //        if (exercise == null)
-        //            return null;
-        //        return new ExerciseEquipmentResponse(exercise);
-        //    }
-        //}
+        public ServiceResponse<ICollection<ExerciseEquipmentResponse>> GetAllExerciseEquipment()
+        {
+            using(DiaryContext db = new DiaryContext())
+            {
+                var list = db.ExerciseEquipment.ToList();
+                List<ExerciseEquipmentResponse> list2 = new List<ExerciseEquipmentResponse>();
+                foreach (var item in list)
+                {
+                    list2.Add(new ExerciseEquipmentResponse(item));
+                }
+                return new ServiceResponse<ICollection<ExerciseEquipmentResponse>>(list2,HttpStatusCode.OK,"Table downloaded successfully");
+            }
+        }
+        public ServiceResponse<ICollection<ExerciseResponse>> GetAllExercises()
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                var list = db.Exercises.ToList();
+                List<ExerciseResponse> list2 = new List<ExerciseResponse>();
+                foreach (var item in list)
+                {
+                    list2.Add(new ExerciseResponse(item));
+                }
+                return new ServiceResponse<ICollection<ExerciseResponse>>(list2, HttpStatusCode.OK, "Table downloaded successfully");
+            }
+        }
+        public ServiceResponse<ICollection<ExerciseDetailsResponse>> GetAllExerciseDetails()
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                var list = db.ExercisesDetails.ToList();
+                List<ExerciseDetailsResponse> list2 = new List<ExerciseDetailsResponse>();
+                foreach (var item in list)
+                {
+                    list2.Add(new ExerciseDetailsResponse(item));
+                }
+                return new ServiceResponse<ICollection<ExerciseDetailsResponse>>(list2, HttpStatusCode.OK, "Table downloaded successfully");
+            }
+        }
+        public ExerciseEquipmentResponse GetExerciseEquipment(int id)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                ExerciseEquipment exercise = db.ExerciseEquipment.FirstOrDefault(x => x.Id == id);
+                if (exercise == null)
+                    return null;
+                return new ExerciseEquipmentResponse(exercise);
+            }
+        }
 
         public ServiceResponse<ExerciseEquipmentResponse> Add(AddExerciseEquipmentRequest exerciseRequest)
         {
@@ -89,6 +129,25 @@ namespace PD.Services.Services
             }
         }
 
+        public ServiceResponse DeleteExercise(int id)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                if (!db.Exercises.Any(x => x.Id == id))
+                {
+                    return new ServiceResponse(HttpStatusCode.NotFound, "There is not existing exercise with given id!");
+                }
 
+                var exerciseToRemove = db.Exercises.Include("ExerciseEquipment").Include("ExerciseTrainings").FirstOrDefault(x => x.Id == id);
+                TrainingService trainingService = new TrainingService();
+                foreach (var exerciseTraining in exerciseToRemove.ExerciseTrainings)
+                {
+                    trainingService.DeleteExerciseTraining(exerciseTraining.Id);
+                }
+                db.Exercises.Remove(exerciseToRemove);
+                db.SaveChanges();
+            }
+            return new ServiceResponse(HttpStatusCode.OK, "Exercise deleted!");
+        }
     }
 }

@@ -24,31 +24,31 @@ namespace PD.Api.Controllers
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
-        [HttpPut]
-        [Route("update")]
-        public IHttpActionResult Update(UpdateDayRequest day)
-        {
-            if (day == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var result = _dayService.Update(day);
-            return ResponseMessage(CreateCustomResponseMessage(result));
-        }
+        //[HttpPut]
+        //[Route("update")]
+        //public IHttpActionResult Update(UpdateDayRequest day)
+        //{
+        //    if (day == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+        //    var result = _dayService.Update(day);
+        //    return ResponseMessage(CreateCustomResponseMessage(result));
+        //}
 
-        [HttpGet]
-        [Route("read")]
-        public IHttpActionResult Read()
-        {
-            var result = _dayService.Read();
-            return ResponseMessage(CreateCustomResponseMessage(result));
-        }
+        //[HttpGet]
+        //[Route("read")]
+        //public IHttpActionResult Read()
+        //{
+        //    var result = _dayService.Read();
+        //    return ResponseMessage(CreateCustomResponseMessage(result));
+        //}
 
-        [HttpGet]
-        [Route("get")]
-        public IHttpActionResult ReadById(int id)
-        {
-            if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var result = _dayService.ReadById(id);
-            return ResponseMessage(CreateCustomResponseMessage(result));
-        }
+        //[HttpGet]
+        //[Route("get")]
+        //public IHttpActionResult ReadById(int id)
+        //{
+        //    if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+        //    var result = _dayService.ReadById(id);
+        //    return ResponseMessage(CreateCustomResponseMessage(result));
+        //}
 
         [HttpDelete]
         [Route("delete")]
@@ -68,13 +68,13 @@ namespace PD.Api.Controllers
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
-        [HttpPut]
-        [Route("updatedream")]
-        public IHttpActionResult UpdateDream(UpdateDreamRequest day)
-        {
-            if (day == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var result = _dayService.UpdateDream(day);
-            return ResponseMessage(CreateCustomResponseMessage(result));
-        }
+        //[HttpPut]
+        //[Route("updatedream")]
+        //public IHttpActionResult UpdateDream(UpdateDreamRequest day)
+        //{
+        //    if (day == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+        //    var result = _dayService.UpdateDream(day);
+        //    return ResponseMessage(CreateCustomResponseMessage(result));
+        //}
     }
 }

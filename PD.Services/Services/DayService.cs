@@ -64,54 +64,59 @@ namespace PD.Services.Services
                 {
                     db.Dreams.Remove(dayToRemove.Dream);
                 }
-                db.Days.Remove(dayToRemove);
+                db.SaveChanges();
+            }
+            using (DiaryContext db = new DiaryContext())
+            {
+                var dayToRemove2 = db.Days.Include("Diary").Include("Dream").Include("TrainingUnits").FirstOrDefault(x => x.Id == id);
+                db.Days.Remove(dayToRemove2);
                 db.SaveChanges();
             }
             return new ServiceResponse(HttpStatusCode.OK, "Day deleted!");
         }
 
-        public ServiceResponse<IEnumerable<DayResponse>> Read()
-        {
-            List<Day> days = new List<Day>();
-            using (DiaryContext db = new DiaryContext())
-            {
-                days = db.Days.Include("Diary").Include("Dream").Include("TrainingUnits").ToList();
-            }
-            List<DayResponse> dayResponses = new List<DayResponse>();
-            foreach (var item in days)
-            {
-                dayResponses.Add(new DayResponse(item,typeof(DayResponse)));
-            }
-            return new ServiceResponse<IEnumerable<DayResponse>>(dayResponses, HttpStatusCode.OK, "Table downloaded!");
-        }
+        //public ServiceResponse<IEnumerable<DayResponse>> Read()
+        //{
+        //    List<Day> days = new List<Day>();
+        //    using (DiaryContext db = new DiaryContext())
+        //    {
+        //        days = db.Days.Include("Diary").Include("Dream").Include("TrainingUnits").ToList();
+        //    }
+        //    List<DayResponse> dayResponses = new List<DayResponse>();
+        //    foreach (var item in days)
+        //    {
+        //        dayResponses.Add(new DayResponse(item,typeof(DayResponse)));
+        //    }
+        //    return new ServiceResponse<IEnumerable<DayResponse>>(dayResponses, HttpStatusCode.OK, "Table downloaded!");
+        //}
 
-        public ServiceResponse<DayResponse> ReadById(int id)
-        {
-            DayResponse dayResponse = GetDay(id);
-            if (dayResponse == null)
-            {
-                return new ServiceResponse<DayResponse>(null, HttpStatusCode.NotFound, "There is not existing day with given id!");
-            }
-            return new ServiceResponse<DayResponse>(dayResponse, HttpStatusCode.OK, "Diary downloaded!");
-        }
-        public ServiceResponse<DayResponse> Update(UpdateDayRequest updateDayRequest)
-        {
-            Day dayToUpdate;
-            using (DiaryContext db = new DiaryContext())
-            {
-                if (!db.Days.Any(x => x.Id == updateDayRequest.Id))
-                {
-                    return new ServiceResponse<DayResponse>(null, HttpStatusCode.NotFound, "There is not existing day with given id!");
-                }
-                dayToUpdate = db.Days.FirstOrDefault(x => x.Id == updateDayRequest.Id);
-                if (updateDayRequest.Date.Year > 2019)
-                {
-                    dayToUpdate.Date = updateDayRequest.Date;
-                }
-                db.SaveChanges();
-                return new ServiceResponse<DayResponse>(new DayResponse(dayToUpdate,typeof(DayResponse)), HttpStatusCode.OK, "User was updated successfully");
-            }
-        }
+        //public ServiceResponse<DayResponse> ReadById(int id)
+        //{
+        //    DayResponse dayResponse = GetDay(id);
+        //    if (dayResponse == null)
+        //    {
+        //        return new ServiceResponse<DayResponse>(null, HttpStatusCode.NotFound, "There is not existing day with given id!");
+        //    }
+        //    return new ServiceResponse<DayResponse>(dayResponse, HttpStatusCode.OK, "Diary downloaded!");
+        //}
+        //public ServiceResponse<DayResponse> Update(UpdateDayRequest updateDayRequest)
+        //{
+        //    Day dayToUpdate;
+        //    using (DiaryContext db = new DiaryContext())
+        //    {
+        //        if (!db.Days.Any(x => x.Id == updateDayRequest.Id))
+        //        {
+        //            return new ServiceResponse<DayResponse>(null, HttpStatusCode.NotFound, "There is not existing day with given id!");
+        //        }
+        //        dayToUpdate = db.Days.FirstOrDefault(x => x.Id == updateDayRequest.Id);
+        //        if (updateDayRequest.Date.Year > 2019)
+        //        {
+        //            dayToUpdate.Date = updateDayRequest.Date;
+        //        }
+        //        db.SaveChanges();
+        //        return new ServiceResponse<DayResponse>(new DayResponse(dayToUpdate,typeof(DayResponse)), HttpStatusCode.OK, "User was updated successfully");
+        //    }
+        //}
 
         public ServiceResponse<DreamResponse> AddDream(AddDreamRequest dreamRequest)
         {
@@ -135,27 +140,27 @@ namespace PD.Services.Services
             }
         }
 
-        public ServiceResponse<DreamResponse> UpdateDream(UpdateDreamRequest updateDreamRequest)
-        {
-            using (DiaryContext db = new DiaryContext())
-            {
-                Dream dreamToUpdate = db.Dreams.FirstOrDefault(x => x.Id == updateDreamRequest.Id);
-                if (dreamToUpdate == null)
-                {
-                    return new ServiceResponse<DreamResponse>(null, HttpStatusCode.NotFound, "There is not existing dream with given id!");
-                }
-                dreamToUpdate = db.Dreams.FirstOrDefault(x => x.Id == updateDreamRequest.Id);
-                if (updateDreamRequest.Length > 0)
-                {
-                    dreamToUpdate.Length = updateDreamRequest.Length;
-                }
-                if (!string.IsNullOrEmpty(updateDreamRequest.Quality))
-                {
-                    dreamToUpdate.Quality = updateDreamRequest.Quality;
-                }
-                db.SaveChanges();
-                return new ServiceResponse<DreamResponse>(new DreamResponse(dreamToUpdate), HttpStatusCode.OK, "UserDetails added succesfully!");
-            }
-        }
+        //public ServiceResponse<DreamResponse> UpdateDream(UpdateDreamRequest updateDreamRequest)
+        //{
+        //    using (DiaryContext db = new DiaryContext())
+        //    {
+        //        Dream dreamToUpdate = db.Dreams.FirstOrDefault(x => x.Id == updateDreamRequest.Id);
+        //        if (dreamToUpdate == null)
+        //        {
+        //            return new ServiceResponse<DreamResponse>(null, HttpStatusCode.NotFound, "There is not existing dream with given id!");
+        //        }
+        //        dreamToUpdate = db.Dreams.FirstOrDefault(x => x.Id == updateDreamRequest.Id);
+        //        if (updateDreamRequest.Length > 0)
+        //        {
+        //            dreamToUpdate.Length = updateDreamRequest.Length;
+        //        }
+        //        if (!string.IsNullOrEmpty(updateDreamRequest.Quality))
+        //        {
+        //            dreamToUpdate.Quality = updateDreamRequest.Quality;
+        //        }
+        //        db.SaveChanges();
+        //        return new ServiceResponse<DreamResponse>(new DreamResponse(dreamToUpdate), HttpStatusCode.OK, "UserDetails added succesfully!");
+        //    }
+        //}
     }
 }

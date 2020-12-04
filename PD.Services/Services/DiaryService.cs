@@ -63,36 +63,41 @@ namespace PD.Services.Services
                 {
                     dayService.Delete(day.Id);
                 }
-                db.Diaries.Remove(diaryToRemove);
+                db.SaveChanges();
+            }
+            using(DiaryContext db = new DiaryContext())
+            {
+                var diaryToRemove2 = db.Diaries.Include(x => x.Days).Include(x => x.User).FirstOrDefault(x => x.Id == id);
+                db.Diaries.Remove(diaryToRemove2);
                 db.SaveChanges();
             }
             return new ServiceResponse(HttpStatusCode.OK, "User deleted!");
         }
 
-        public ServiceResponse<IEnumerable<DiaryResponse>> Read()
-        {
-            List<Diary> diaries = new List<Diary>();
-            using (DiaryContext db = new DiaryContext())
-            {
-                diaries = db.Diaries.Include(x => x.Days).Include(x => x.User).ToList();
-            }
-            List<DiaryResponse> diaryResponses = new List<DiaryResponse>();
-            foreach (var item in diaries)
-            {
-                diaryResponses.Add(new DiaryResponse(item));
-            }
-            return new ServiceResponse<IEnumerable<DiaryResponse>>(diaryResponses, HttpStatusCode.OK, "Table downloaded!");
-        }
+        //public ServiceResponse<IEnumerable<DiaryResponse>> Read()
+        //{
+        //    List<Diary> diaries = new List<Diary>();
+        //    using (DiaryContext db = new DiaryContext())
+        //    {
+        //        diaries = db.Diaries.Include(x => x.Days).Include(x => x.User).ToList();
+        //    }
+        //    List<DiaryResponse> diaryResponses = new List<DiaryResponse>();
+        //    foreach (var item in diaries)
+        //    {
+        //        diaryResponses.Add(new DiaryResponse(item));
+        //    }
+        //    return new ServiceResponse<IEnumerable<DiaryResponse>>(diaryResponses, HttpStatusCode.OK, "Table downloaded!");
+        //}
 
-        public ServiceResponse<DiaryResponse> ReadById(int id)
-        {
-            DiaryResponse diaryResponse = GetDiary(id);
-            if(diaryResponse == null)
-            {
-                return new ServiceResponse<DiaryResponse>(null, HttpStatusCode.NotFound, "There is not existing diary with given id!");
-            }
-            return new ServiceResponse<DiaryResponse>(diaryResponse, HttpStatusCode.OK, "Diary downloaded!");
-        }
+        //public ServiceResponse<DiaryResponse> ReadById(int id)
+        //{
+        //    DiaryResponse diaryResponse = GetDiary(id);
+        //    if(diaryResponse == null)
+        //    {
+        //        return new ServiceResponse<DiaryResponse>(null, HttpStatusCode.NotFound, "There is not existing diary with given id!");
+        //    }
+        //    return new ServiceResponse<DiaryResponse>(diaryResponse, HttpStatusCode.OK, "Diary downloaded!");
+        //}
 
         public ServiceResponse<DiaryResponse> Update(UpdateDiaryRequest updateDiaryRequest)
         {

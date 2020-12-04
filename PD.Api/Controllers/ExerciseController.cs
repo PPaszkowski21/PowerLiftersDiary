@@ -1,5 +1,6 @@
 ﻿using PD.Services.Contracts.Api.Exercises.Requests;
 using PD.Services.Contracts.Api.ExercisesDetails.Request;
+using PD.Services.Contracts.Api.ExercisesEquipments.Requests;
 using PD.Services.Services;
 using System.Net;
 using System.Web.Http;
@@ -30,6 +31,47 @@ namespace PD.Api.Controllers
         {
             if (exerciseRequest == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
             var result = _exerciseService.Add(exerciseRequest);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpPost]
+        [Route("create/exerciseEquipment")]
+        public IHttpActionResult Create(AddExerciseEquipmentRequest exerciseRequest)
+        {
+            if (exerciseRequest == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _exerciseService.Add(exerciseRequest);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpDelete]
+        [Route("delete/exercise")]
+        public IHttpActionResult DeleteExercise(int id)
+        {
+            if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _exerciseService.DeleteExercise(id);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpGet]
+        [Route("getall/exerciseequipment")]
+        public IHttpActionResult ReadExEquipment()
+        {
+            var result = _exerciseService.GetAllExerciseEquipment();
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpGet]
+        [Route("getall/exercisesdetails")]
+        public IHttpActionResult ReadExDetails()
+        {
+            var result = _exerciseService.GetAllExerciseDetails();
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+        [HttpGet]
+        [Route("getall/exercises")]
+        public IHttpActionResult ReadEx()
+        {
+            var result = _exerciseService.GetAllExercises();
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
     }

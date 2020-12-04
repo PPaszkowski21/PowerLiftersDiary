@@ -33,6 +33,23 @@ namespace PD.Api.Controllers
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
+        [HttpDelete]
+        [Route("delete/training")]
+        public IHttpActionResult DeleteTraining(int id)
+        {
+            if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _trainingService.DeleteTrainingUnit(id);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpDelete]
+        [Route("delete/exercise")]
+        public IHttpActionResult DeleteExercise(int id)
+        {
+            if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _trainingService.DeleteExerciseTraining(id);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
 
         //[HttpGet]
         //[Route("read")]
@@ -42,22 +59,15 @@ namespace PD.Api.Controllers
         //    return ResponseMessage(CreateCustomResponseMessage(result));
         //}
 
-        [HttpGet]
-        [Route("get")]
-        public IHttpActionResult ReadById(int id)
-        {
-            if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var result = _trainingService.ReadById(id);
-            return ResponseMessage(CreateCustomResponseMessage(result));
-        }
-
-        //[HttpDelete]
-        //[Route("delete")]
-        //public IHttpActionResult Delete(int id)
+        //[HttpGet]
+        //[Route("get")]
+        //public IHttpActionResult ReadById(int id)
         //{
         //    if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-        //    var result = _trainingService.Delete(id);
+        //    var result = _trainingService.ReadById(id);
         //    return ResponseMessage(CreateCustomResponseMessage(result));
         //}
+
+
     }
 }

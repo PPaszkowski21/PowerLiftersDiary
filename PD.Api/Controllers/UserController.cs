@@ -23,7 +23,7 @@ namespace PD.Api.Controllers
         public IHttpActionResult Test(AddUserRequest user)
         {
             var currentUser = _userService.GetUserModelFromRequest(Request);
-            return Ok();
+            return ResponseMessage(CreateCustomResponseMessage(currentUser));
         }
 
         [AllowAnonymous]
@@ -36,13 +36,13 @@ namespace PD.Api.Controllers
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
-        [HttpGet]
-        [Route("read")]
-        public IHttpActionResult Read()
-        {
-            var result = _userService.Read();
-            return ResponseMessage(CreateCustomResponseMessage(result));
-        }
+        //[HttpGet]
+        //[Route("read")]
+        //public IHttpActionResult Read()
+        //{
+        //    var result = _userService.Read();
+        //    return ResponseMessage(CreateCustomResponseMessage(result));
+        //}
 
         [HttpGet]
         [Route("get")]
@@ -62,33 +62,33 @@ namespace PD.Api.Controllers
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
-        [HttpPut]
-        [Route("update")]
-        public IHttpActionResult Update(UpdateUserRequest user)
-        {
-            if (user.Id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var result = _userService.Update(user);
-            return ResponseMessage(CreateCustomResponseMessage(result));
-        }
+        //[HttpPut]
+        //[Route("update")]
+        //public IHttpActionResult Update(UpdateUserRequest user)
+        //{
+        //    if (user.Id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+        //    var result = _userService.Update(user);
+        //    return ResponseMessage(CreateCustomResponseMessage(result));
+        //}
 
         [HttpPost]
         [Route("adddetails")]
         public IHttpActionResult AddDetails(AddUserDetailsRequest user)
         {
             if (user == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var userService = (UserService)_userService;
+            var userService = _userService;
             var result = userService.AddDetails(user);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
-        [HttpPut]
-        [Route("updatedetails")]
-        public IHttpActionResult UpdateDetails(UpdateUserDetailsRequest user)
-        {
-            if (user == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var userService = (UserService)_userService;
-            var result = userService.UpdateDetails(user);
-            return ResponseMessage(CreateCustomResponseMessage(result));
-        }
+        //[HttpPut]
+        //[Route("updatedetails")]
+        //public IHttpActionResult UpdateDetails(UpdateUserDetailsRequest user)
+        //{
+        //    if (user == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+        //    var userService = (UserService)_userService;
+        //    var result = userService.UpdateDetails(user);
+        //    return ResponseMessage(CreateCustomResponseMessage(result));
+        //}
     }
 }

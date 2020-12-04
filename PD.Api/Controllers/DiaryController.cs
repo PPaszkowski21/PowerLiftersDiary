@@ -24,29 +24,19 @@ namespace PD.Api.Controllers
         }
         //[HttpGet]
         //[Route("get")]
-        //public Diary GetDiary(int id)
+        //public IHttpActionResult ReadById(int id)
         //{
-        //    using (DiaryContext db = new DiaryContext())
-        //    {
-        //        Diary diary = db.Diaries.Where(x => x.Id == id).Include(x => x.User).FirstOrDefault();
-        //        return diary;
-        //    }
+        //    if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+        //    var result = _diaryService.ReadById(id);
+        //    return ResponseMessage(CreateCustomResponseMessage(result));
         //}
-        [HttpGet]
-        [Route("get")]
-        public IHttpActionResult ReadById(int id)
-        {
-            if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-            var result = _diaryService.ReadById(id);
-            return ResponseMessage(CreateCustomResponseMessage(result));
-        }
-        [HttpGet]
-        [Route("read")]
-        public IHttpActionResult Read()
-        {
-            var result = _diaryService.Read();
-            return ResponseMessage(CreateCustomResponseMessage(result));
-        }
+        //[HttpGet]
+        //[Route("read")]
+        //public IHttpActionResult Read()
+        //{
+        //    var result = _diaryService.Read();
+        //    return ResponseMessage(CreateCustomResponseMessage(result));
+        //}
         [HttpDelete]
         [Route("delete")]
         public IHttpActionResult Delete(int id)
