@@ -53,5 +53,12 @@ namespace PD.Api.Controllers
             var result = _diaryService.Update(diary);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
+        [HttpPost]
+        [Route("weeksummary")]
+        public IHttpActionResult WeekSummary(int diaryId, int dayId)
+        {
+            var result = _diaryService.WeekSummary(diaryId, dayId);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
     }
 }

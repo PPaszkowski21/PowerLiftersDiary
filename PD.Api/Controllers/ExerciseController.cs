@@ -74,5 +74,11 @@ namespace PD.Api.Controllers
             var result = _exerciseService.GetAllExercises();
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
+        //[HttpGet]
+        //[Route("checkschedule")]
+        //public IHttpActionResult CheckTrainingSchedule()
+        //{
+        //    var result = _exerciseService;
+        //}
     }
 }

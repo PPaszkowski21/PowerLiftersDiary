@@ -1,4 +1,6 @@
-﻿using PD.Services.Contracts.Api.Diaries.Requests;
+﻿using PD.Data.Models;
+using PD.Services.Contracts.Api.Days.Responses;
+using PD.Services.Contracts.Api.Diaries.Requests;
 using PD.Services.Contracts.Api.Diaries.Responses;
 using PowerlifterDiary.Models;
 using System;
@@ -12,6 +14,16 @@ namespace PD.Services.Services
 {
     public class DiaryService
     {
+        public Dictionary<string, int> BodyPartToDo = new Dictionary<string, int>()
+            {
+                {"Klatka",4},
+                {"Plecy",4},
+                {"Nogi",4},
+                {"Barki",3},
+                {"Biceps",3},
+                {"Triceps",3},
+                {"Brzuch", 3}
+            };
         public ServiceResponse<DiaryResponse> Add(AddDiaryRequest diaryRequest)
         {
             using (DiaryContext db = new DiaryContext())
@@ -65,7 +77,7 @@ namespace PD.Services.Services
                 }
                 db.SaveChanges();
             }
-            using(DiaryContext db = new DiaryContext())
+            using (DiaryContext db = new DiaryContext())
             {
                 var diaryToRemove2 = db.Diaries.Include(x => x.Days).Include(x => x.User).FirstOrDefault(x => x.Id == id);
                 db.Diaries.Remove(diaryToRemove2);
@@ -154,5 +166,46 @@ namespace PD.Services.Services
                 return new ServiceResponse<DiaryResponse>(new DiaryResponse(diaryToUpdate), HttpStatusCode.OK, "User was updated successfully");
             }
         }
+
+        public ServiceResponse<WeekSummaryResponse> WeekSummary(int diaryId, int dayId)
+        {
+            DiaryResponse diary = GetDiary(diaryId);
+            DayService dayService = new DayService();
+            DayResponse day = dayService.GetDay(dayId);
+            while (day.Date.DayOfWeek != DayOfWeek.Monday)
+            {
+                day.Date = day.Date.AddDays(-1);
+            }
+            DateTime startOfTheWeek = day.Date;
+            DateTime endOfTheWeek = day.Date.AddDays(6);
+            string dateRange = startOfTheWeek.ToString() + " -> " + endOfTheWeek.ToString();
+            List<DayResponse> days = diary.Days.Where(x => x.Date.Ticks >= startOfTheWeek.Ticks && x.Date.Ticks <= endOfTheWeek.Ticks).ToList();
+            List<ExerciseStatus> weekSummary = new List<ExerciseStatus>();
+
+            foreach (var singleDay in days)
+            {
+                foreach (var trainingUnit in day.TrainingUnits)
+                {
+                    foreach (var exercise in trainingUnit.ExerciseTrainings)
+                    {
+                        if (!weekSummary.Any(x => x.BodyPart == exercise.Exercise.BodyPart))
+                        {
+                            ExerciseStatus exerciseStatus = new ExerciseStatus
+                            {
+                                BodyPart = exercise.Exercise.BodyPart,
+                                ExercisesToDo = BodyPartToDo[exercise.Exercise.BodyPart]
+                            };
+                            weekSummary.Add(exerciseStatus);
+                        }
+                        else
+                        {
+                            weekSummary.FirstOrDefault(x => x.BodyPart == exercise.Exercise.BodyPart).ExercisesDone++;
+                        }
+                    }
+                }
+            }
+            return new ServiceResponse<WeekSummaryResponse>(new WeekSummaryResponse(dateRange, weekSummary), HttpStatusCode.OK, "Week summary done successfully");
+        }
+
     }
 }

@@ -16,7 +16,6 @@ namespace PD.Api.Controllers
             this._userService = new UserService();
         }
 
-
         
         [HttpPost]
         [Route("authorization/test")]
@@ -62,14 +61,14 @@ namespace PD.Api.Controllers
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
-        //[HttpPut]
-        //[Route("update")]
-        //public IHttpActionResult Update(UpdateUserRequest user)
-        //{
-        //    if (user.Id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-        //    var result = _userService.Update(user);
-        //    return ResponseMessage(CreateCustomResponseMessage(result));
-        //}
+        [HttpPut]
+        [Route("update")]
+        public IHttpActionResult Update(UpdateUserRequest user)
+        {
+            if (user.Id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _userService.Update(user);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
 
         [HttpPost]
         [Route("adddetails")]
@@ -81,14 +80,13 @@ namespace PD.Api.Controllers
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
-        //[HttpPut]
-        //[Route("updatedetails")]
-        //public IHttpActionResult UpdateDetails(UpdateUserDetailsRequest user)
-        //{
-        //    if (user == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
-        //    var userService = (UserService)_userService;
-        //    var result = userService.UpdateDetails(user);
-        //    return ResponseMessage(CreateCustomResponseMessage(result));
-        //}
+        [HttpPut]
+        [Route("updatedetails")]
+        public IHttpActionResult UpdateDetails(UpdateUserDetailsRequest user)
+        {
+            if (user == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _userService.UpdateDetails(user);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
     }
 }

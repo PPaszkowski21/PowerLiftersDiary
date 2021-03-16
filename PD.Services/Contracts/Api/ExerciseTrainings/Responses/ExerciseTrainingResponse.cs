@@ -24,5 +24,9 @@ namespace PD.Services.Contracts.Api.ExerciseTrainings.Responses
                 ExerciseDetails = new ExerciseDetailsResponse(exerciseTraining.ExerciseDetails);
             }
         }
+
+        public ExerciseTrainingResponse()
+        {
+        }
     }
 }

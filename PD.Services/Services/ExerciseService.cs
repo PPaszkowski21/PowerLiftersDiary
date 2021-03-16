@@ -26,7 +26,8 @@ namespace PD.Services.Services
                 {
                     Name = exerciseRequest.Name,
                     Description = exerciseRequest.Description,
-                    ExerciseEquipment = exerciseEquipment
+                    ExerciseEquipment = exerciseEquipment,
+                    BodyPart = exerciseRequest.BodyPart
 
                 };
                 Exercise _exercise = db.Exercises.Add(exercise);

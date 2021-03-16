@@ -91,6 +91,7 @@
     <Compile Include="Contracts\Api\Diaries\Requests\AddDiaryRequest.cs" />
     <Compile Include="Contracts\Api\Diaries\Requests\UpdateDiaryRequest.cs" />
     <Compile Include="Contracts\Api\Diaries\Responses\DiaryResponse.cs" />
+    <Compile Include="Contracts\Api\Diaries\Responses\WeekSummaryResponse.cs" />
     <Compile Include="Contracts\Api\Dreams\Requests\AddDreamRequest.cs" />
     <Compile Include="Contracts\Api\Dreams\Requests\UpdateDreamRequest.cs" />
     <Compile Include="Contracts\Api\Dreams\Responses\DreamResponse.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Contracts\Api\Exercises\Requests\AddExerciseRequest.cs" />
     <Compile Include="Contracts\Api\Exercises\Responses\ExerciseResponse.cs" />
     <Compile Include="Contracts\Api\ExerciseTrainings\Requests\AddExerciseTrainingRequest.cs" />
+    <Compile Include="Contracts\Api\ExerciseTrainings\Requests\AddExerciseTrainingsListRequest.cs" />
     <Compile Include="Contracts\Api\ExerciseTrainings\Responses\ExerciseTrainingResponse.cs" />
     <Compile Include="Contracts\Api\TrainingUnits\Requests\AddTrainingUnitRequest.cs" />
     <Compile Include="Contracts\Api\TrainingUnits\Responses\TrainingUnitResponse.cs" />

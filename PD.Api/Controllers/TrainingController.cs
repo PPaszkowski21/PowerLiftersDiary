@@ -1,6 +1,7 @@
 ﻿using PD.Services.Contracts.Api.ExerciseTrainings.Requests;
 using PD.Services.Contracts.Api.TrainingUnits.Requests;
 using PD.Services.Services;
+using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
 
@@ -51,6 +52,14 @@ namespace PD.Api.Controllers
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
 
+        [HttpPost]
+        [Route("create/exerciselist")]
+        public IHttpActionResult Create(List<AddExerciseTrainingRequest> exercises)
+        {
+            if (exercises == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _trainingService.CreateListExerciseTrainings(exercises);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
         //[HttpGet]
         //[Route("read")]
         //public IHttpActionResult Read()

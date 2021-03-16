@@ -3,6 +3,7 @@ using PD.Services.Contracts.Api.ExerciseTrainings.Responses;
 using PD.Services.Contracts.Api.TrainingUnits.Requests;
 using PD.Services.Contracts.Api.TrainingUnits.Responses;
 using PowerlifterDiary.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
@@ -126,6 +127,20 @@ namespace PD.Services.Services
             return new ServiceResponse(HttpStatusCode.OK, "Training unit deleted!");
         }
 
+        public ServiceResponse<ICollection<ExerciseTrainingResponse>> CreateListExerciseTrainings(List<AddExerciseTrainingRequest> exercises)
+        {
+            List<ExerciseTrainingResponse> response = new List<ExerciseTrainingResponse>();
+            foreach (var item in exercises)
+            {
+                ExerciseTrainingResponse exercise;
+                exercise = Add(item).Content;
+                if(exercise != null)
+                {
+                    response.Add(exercise);
+                }
+            }
+            return new ServiceResponse<ICollection<ExerciseTrainingResponse>>(response, HttpStatusCode.OK, "Exercise trainings added succesfully!");
+        }
         //public ServiceResponse<TrainingUnitResponse> ReadById(int id)
         //{
         //    TrainingUnitResponse trainingUnitResponse = GetTrainingUnit(id);

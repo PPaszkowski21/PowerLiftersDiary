@@ -96,6 +96,10 @@
     <Compile Include="Migrations\202012021755073_ChangeUserModelDefinition.designer.cs">
       <DependentUpon>202012021755073_ChangeUserModelDefinition.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103150101294_BodyPartinExercise.cs" />
+    <Compile Include="Migrations\202103150101294_BodyPartinExercise.designer.cs">
+      <DependentUpon>202103150101294_BodyPartinExercise.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CustomRole.cs" />
     <Compile Include="Models\CustomUserClaim.cs" />
@@ -107,6 +111,7 @@
     <Compile Include="Models\Exercise.cs" />
     <Compile Include="Models\ExerciseDetails.cs" />
     <Compile Include="Models\ExerciseEquipment.cs" />
+    <Compile Include="Models\ExerciseStatus.cs" />
     <Compile Include="Models\ExerciseTraining.cs" />
     <Compile Include="Models\CustomUserLogin .cs" />
     <Compile Include="Models\TrainingUnit.cs" />
@@ -127,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202012021755073_ChangeUserModelDefinition.resx">
       <DependentUpon>202012021755073_ChangeUserModelDefinition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103150101294_BodyPartinExercise.resx">
+      <DependentUpon>202103150101294_BodyPartinExercise.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
