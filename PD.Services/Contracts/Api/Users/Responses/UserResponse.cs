@@ -20,7 +20,9 @@ namespace PD.Services.Contracts.Api.Users.Responses
             City = user.City;
             if(user.UserDetails!=null)
             {
-                UserDetails = new UserDetailsResponse(user.UserDetails);
+                //UserDetails = new UserDetailsResponse(user.UserDetails);
+                UserService userService = new UserService();
+                UserDetails = userService.ReadUserDetailsById(user.UserDetails.Id);
             }
             
             if(user.Diaries != null)

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using PD.Data.Models;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace PowerlifterDiary.Models
 {
@@ -15,7 +12,7 @@ namespace PowerlifterDiary.Models
         public int Age { get; set; }
         public float BMR { get; set; }
         public float BMI { get; set; }
-
+        public virtual Avatar Avatar { get; set; }
         public virtual User User { get; set; }
     }
 }

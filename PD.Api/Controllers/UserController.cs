@@ -2,6 +2,7 @@
 using PD.Services.Contracts.Api.Users.Requests;
 using PD.Services.Services;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace PD.Api.Controllers
@@ -86,6 +87,33 @@ namespace PD.Api.Controllers
         {
             if (user == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
             var result = _userService.UpdateDetails(user);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpPost]
+        [Route("addavatar")]
+        public IHttpActionResult AddAvatar(AddAvatarRequest avatar)
+        {
+            if (avatar == null || !ModelState.IsValid) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result =_userService.AddAvatar(avatar);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpGet]
+        [Route("getavatar")]
+        public IHttpActionResult GetAvatar(int id)
+        {
+            if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _userService.GetAvatar(id);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
+
+        [HttpDelete]
+        [Route("deleteavatar")]
+        public IHttpActionResult DeleteAvatar(int id)
+        {
+            if (id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _userService.DeleteAvatar(id);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
     }

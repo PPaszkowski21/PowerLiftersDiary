@@ -73,6 +73,10 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=4.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.5.0.2\lib\net461\System.Drawing.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.Cors, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.0.0\lib\net45\System.Web.Cors.dll</HintPath>
@@ -109,8 +113,10 @@
     <Compile Include="Contracts\Api\UserDetails\Requests\AddUserDetailsRequest.cs" />
     <Compile Include="Contracts\Api\UserDetails\Requests\UpdateUserDetailsRequest.cs" />
     <Compile Include="Contracts\Api\UserDetails\Responses\UserDetailsResponse.cs" />
+    <Compile Include="Contracts\Api\UserDetails\Requests\AddAvatarRequest.cs" />
     <Compile Include="Contracts\Api\Users\Requests\AddUserRequest.cs" />
     <Compile Include="Contracts\Api\Users\Requests\UpdateUserRequest.cs" />
+    <Compile Include="Contracts\Api\UserDetails\Responses\AvatarResponse.cs" />
     <Compile Include="Contracts\Api\Users\Responses\UserResponse.cs" />
     <Compile Include="ServiceResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

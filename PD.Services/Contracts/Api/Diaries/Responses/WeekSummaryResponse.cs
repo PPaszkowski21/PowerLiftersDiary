@@ -9,11 +9,13 @@ namespace PD.Services.Contracts.Api.Diaries.Responses
 {
     public class WeekSummaryResponse
     {
-        public string DateRange { get; set; }
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
         public List<ExerciseStatus> WeekSummary { get; set; }
-        public WeekSummaryResponse(string dateRange, List<ExerciseStatus> weekSummary)
+        public WeekSummaryResponse(string startDate, string endDate, List<ExerciseStatus> weekSummary)
         {
-            DateRange = dateRange;
+            StartDate = startDate;
+            EndDate = endDate;
             WeekSummary = weekSummary;
         }
     }

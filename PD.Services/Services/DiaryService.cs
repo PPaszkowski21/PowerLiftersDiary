@@ -172,19 +172,23 @@ namespace PD.Services.Services
             DiaryResponse diary = GetDiary(diaryId);
             DayService dayService = new DayService();
             DayResponse day = dayService.GetDay(dayId);
-            while (day.Date.DayOfWeek != DayOfWeek.Monday)
+            DayResponse dayCopy = day;
+            dayCopy.Date.AddHours(-day.Date.Hour);
+            dayCopy.Date.AddMinutes(-day.Date.Minute);
+            dayCopy.Date.AddSeconds(-day.Date.Second);
+            dayCopy.Date.AddMilliseconds(-day.Date.Millisecond);
+            while (dayCopy.Date.DayOfWeek != DayOfWeek.Monday)
             {
-                day.Date = day.Date.AddDays(-1);
+                dayCopy.Date = dayCopy.Date.AddDays(-1);
             }
-            DateTime startOfTheWeek = day.Date;
-            DateTime endOfTheWeek = day.Date.AddDays(6);
-            string dateRange = startOfTheWeek.ToString() + " -> " + endOfTheWeek.ToString();
+            DateTime startOfTheWeek = dayCopy.Date;
+            DateTime endOfTheWeek = dayCopy.Date.AddDays(6);
             List<DayResponse> days = diary.Days.Where(x => x.Date.Ticks >= startOfTheWeek.Ticks && x.Date.Ticks <= endOfTheWeek.Ticks).ToList();
             List<ExerciseStatus> weekSummary = new List<ExerciseStatus>();
 
             foreach (var singleDay in days)
             {
-                foreach (var trainingUnit in day.TrainingUnits)
+                foreach (var trainingUnit in singleDay.TrainingUnits)
                 {
                     foreach (var exercise in trainingUnit.ExerciseTrainings)
                     {
@@ -204,7 +208,7 @@ namespace PD.Services.Services
                     }
                 }
             }
-            return new ServiceResponse<WeekSummaryResponse>(new WeekSummaryResponse(dateRange, weekSummary), HttpStatusCode.OK, "Week summary done successfully");
+            return new ServiceResponse<WeekSummaryResponse>(new WeekSummaryResponse(startOfTheWeek.ToString(),endOfTheWeek.ToString(), weekSummary), HttpStatusCode.OK, "Week summary done successfully");
         }
 
     }

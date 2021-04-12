@@ -1,4 +1,6 @@
-﻿using PowerlifterDiary.Models;
+﻿using PD.Data.Models;
+using PD.Services.Contracts.Api.Users.Responses;
+using PowerlifterDiary.Models;
 using UsersDetails = PowerlifterDiary.Models.UserDetails;
 
 namespace PD.Services.Contracts.Api.UserDetails.Responses
@@ -11,6 +13,7 @@ namespace PD.Services.Contracts.Api.UserDetails.Responses
         public int Age { get; set; }
         public float BMR { get; set; }
         public float BMI { get; set; }
+        public AvatarResponse Avatar { get; set; }
         public UserDetailsResponse()
         {
 
@@ -24,6 +27,10 @@ namespace PD.Services.Contracts.Api.UserDetails.Responses
             Age = userDetails.Age;
             BMI = userDetails.BMI;
             BMR = userDetails.BMR;
+            if(userDetails.Avatar != null)
+            {
+                Avatar = new AvatarResponse(userDetails.Avatar);
+            }
         }
 
         public UserDetailsResponse(User user)
@@ -36,6 +43,10 @@ namespace PD.Services.Contracts.Api.UserDetails.Responses
                 Age = user.UserDetails.Age;
                 BMR = user.UserDetails.BMR;
                 BMI = user.UserDetails.BMI;
+                if(user.UserDetails.Avatar != null)
+                {
+                    Avatar = new AvatarResponse(user.UserDetails.Avatar);
+                }
             }
         }
     }

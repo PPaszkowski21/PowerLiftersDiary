@@ -20,5 +20,6 @@ namespace PowerlifterDiary.Models
         public DbSet<Diary> Diaries { get; set; }
         public DbSet<Dream> Dreams { get; set; }
         public DbSet<UserDetails> UserDetails { get; set; }
+        public DbSet<Avatar> Avatars { get; set; }
     }
 }

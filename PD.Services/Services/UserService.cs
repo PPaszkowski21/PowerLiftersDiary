@@ -10,9 +10,12 @@ using PowerlifterDiary.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace PD.Services.Services
 {
@@ -137,6 +140,16 @@ namespace PD.Services.Services
             return new ServiceResponse<UserResponse>(userResponse, HttpStatusCode.OK, "User downloaded!");
         }
 
+        public UserDetailsResponse ReadUserDetailsById(int id)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                UserDetails userDetails = db.UserDetails.Include(x => x.Avatar).FirstOrDefault(x => x.Id == id);
+                if (userDetails == null)
+                    return null;
+                return new UserDetailsResponse(userDetails);
+            }
+        }
         public ServiceResponse<UserResponse> Update(UpdateUserRequest updateUserRequest)
         {
             User userToUpdate;
@@ -192,7 +205,6 @@ namespace PD.Services.Services
 
         public ServiceResponse<UserDetailsResponse> UpdateDetails(UpdateUserDetailsRequest userDetailsRequest)
         {
-            
             using (DiaryContext db = new DiaryContext())
             {
                 UserDetails userDetailsToUpdate = db.UserDetails.FirstOrDefault(x => x.Id == userDetailsRequest.UserId);
@@ -246,6 +258,63 @@ namespace PD.Services.Services
             return null;
         }
 
+        public ServiceResponse<AvatarResponse> AddAvatar(AddAvatarRequest request)
+        {
+            Avatar avatar;
+            using (DiaryContext db = new DiaryContext())
+            {
+                var userDetails = db.UserDetails.FirstOrDefault(x => x.Id == request.UserDetailsId);
+                if (userDetails == null)
+                {
+                    return new ServiceResponse<AvatarResponse>(null, HttpStatusCode.NotFound, "Unable to find the user details!");
+                }
+                avatar = db.Avatars.FirstOrDefault(x => x.Id == userDetails.Id);
+                if(avatar != null)
+                {
+                    avatar.Image = Convert.FromBase64String(request.Image);
+                }
+                else
+                {
+                    avatar = new Avatar()
+                    {
+                        Id = userDetails.Id,
+                        Image = Convert.FromBase64String(request.Image),
+                        UserDetails = userDetails
+                    };
+                    db.Avatars.Add(avatar);
+                }
+                db.SaveChanges();
+            }
+            return new ServiceResponse<AvatarResponse>(new AvatarResponse(avatar),HttpStatusCode.OK, "Avatar created successfully");
+        }
+        public ServiceResponse<AvatarResponse> GetAvatar(int id)
+        {
+            Avatar avatar;
+            using(DiaryContext db = new DiaryContext())
+            {
+                avatar = db.Avatars.FirstOrDefault(x => x.Id == id);
+                if(avatar == null)
+                {
+                    return new ServiceResponse<AvatarResponse>(null, HttpStatusCode.NotFound, "There is no existing avatar with given id!");
+                }
+            }
+            return new ServiceResponse<AvatarResponse>(new AvatarResponse(avatar), HttpStatusCode.OK, "Avatar downloaded");
+        }
+
+        public ServiceResponse DeleteAvatar(int id)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                if(!db.Avatars.Any(x=>x.Id == id))
+                {
+                    return new ServiceResponse(HttpStatusCode.NotFound, "There is no existing avatar with given id!");
+                }
+                Avatar avatarToRemove = db.Avatars.FirstOrDefault(x => x.Id == id);
+                db.Avatars.Remove(avatarToRemove);
+                db.SaveChanges();
+            }
+            return new ServiceResponse(HttpStatusCode.OK, "Avatar deleted!");
+        }
         private float[] CalculateBMIandBMR(float weight, int height, int age)
         {
             float[] results = new float[2];
