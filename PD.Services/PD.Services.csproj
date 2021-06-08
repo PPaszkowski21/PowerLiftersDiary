@@ -111,6 +111,7 @@
     <Compile Include="Contracts\Api\TrainingUnits\Requests\AddTrainingUnitRequest.cs" />
     <Compile Include="Contracts\Api\TrainingUnits\Responses\TrainingUnitResponse.cs" />
     <Compile Include="Contracts\Api\UserDetails\Requests\AddUserDetailsRequest.cs" />
+    <Compile Include="Contracts\Api\UserDetails\Requests\SaveBrandingRequest.cs" />
     <Compile Include="Contracts\Api\UserDetails\Requests\UpdateUserDetailsRequest.cs" />
     <Compile Include="Contracts\Api\UserDetails\Responses\UserDetailsResponse.cs" />
     <Compile Include="Contracts\Api\UserDetails\Requests\AddAvatarRequest.cs" />

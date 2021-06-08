@@ -116,5 +116,14 @@ namespace PD.Api.Controllers
             var result = _userService.DeleteAvatar(id);
             return ResponseMessage(CreateCustomResponseMessage(result));
         }
+
+        [HttpPost]
+        [Route("savebranding")]
+        public IHttpActionResult SaveBrandingSettings(SaveBrandingRequest request)
+        {
+            if (request.Id <= 0) return ResponseMessage(CreateCustomResponseMessage(HttpStatusCode.BadRequest));
+            var result = _userService.SaveBrandingSettings(request);
+            return ResponseMessage(CreateCustomResponseMessage(result));
+        }
     }
 }

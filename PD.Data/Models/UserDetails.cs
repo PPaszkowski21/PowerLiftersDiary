@@ -12,6 +12,7 @@ namespace PowerlifterDiary.Models
         public int Age { get; set; }
         public float BMR { get; set; }
         public float BMI { get; set; }
+        public string BrandingSettings { get; set; }
         public virtual Avatar Avatar { get; set; }
         public virtual User User { get; set; }
     }

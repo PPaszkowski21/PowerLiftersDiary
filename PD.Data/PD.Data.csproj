@@ -104,6 +104,10 @@
     <Compile Include="Migrations\202103292323052_Add avatar.designer.cs">
       <DependentUpon>202103292323052_Add avatar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202105261939005_BrandingSettings_UserDetails.cs" />
+    <Compile Include="Migrations\202105261939005_BrandingSettings_UserDetails.designer.cs">
+      <DependentUpon>202105261939005_BrandingSettings_UserDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Avatar.cs" />
     <Compile Include="Models\CustomRole.cs" />
@@ -143,6 +147,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103292323052_Add avatar.resx">
       <DependentUpon>202103292323052_Add avatar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105261939005_BrandingSettings_UserDetails.resx">
+      <DependentUpon>202105261939005_BrandingSettings_UserDetails.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

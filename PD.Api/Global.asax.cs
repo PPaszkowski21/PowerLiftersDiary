@@ -18,5 +18,9 @@ namespace PD.Api
             GlobalConfiguration.Configure(WebApiConfig.Register);
 
         }
+        protected void Application_EndRequest()
+        {
+            Response.Headers.Remove("Access-Control-Allow-Origin");
+        }
     }
 }

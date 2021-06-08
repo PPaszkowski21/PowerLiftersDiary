@@ -315,6 +315,21 @@ namespace PD.Services.Services
             }
             return new ServiceResponse(HttpStatusCode.OK, "Avatar deleted!");
         }
+
+        public ServiceResponse SaveBrandingSettings(SaveBrandingRequest request)
+        {
+            using (DiaryContext db = new DiaryContext())
+            {
+                var userDetails = db.UserDetails.FirstOrDefault(x => x.Id == request.Id);
+                if(userDetails == null)
+                {
+                    return new ServiceResponse(HttpStatusCode.BadRequest, "There is no existing user details with given id!");
+                }
+                userDetails.BrandingSettings = request.BrandingSettings;
+                db.SaveChanges();
+            }
+            return new ServiceResponse(HttpStatusCode.OK, "Branding saved!");
+        }
         private float[] CalculateBMIandBMR(float weight, int height, int age)
         {
             float[] results = new float[2];
